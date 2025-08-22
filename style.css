@@ -31,18 +31,6 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-@font-face {
-    font-family: 'Inter';
-    font-display: swap;
-    src: url('https://fonts.gstatic.com/s/inter/v12/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: 'Orbitron';
-    font-display: swap;
-    src: url('https://fonts.gstatic.com/s/orbitron/v25/yMJRMIlzdpvBhQQL_Qq7dy0.woff2') format('woff2');
-}
-
 .bg-matrix {
     position: fixed;
     top: 0;
@@ -50,7 +38,7 @@ body {
     width: 100%;
     height: 100%;
     z-index: -2;
-    background: 
+    background:
         radial-gradient(circle at 20% 80%, rgba(255, 0, 110, 0.15) 0%, transparent 50%),
         radial-gradient(circle at 80% 20%, rgba(131, 56, 236, 0.15) 0%, transparent 50%),
         var(--dark-bg);
@@ -63,7 +51,7 @@ body {
     width: 100%;
     height: 100%;
     z-index: -1;
-    background-image: 
+    background-image:
         linear-gradient(rgba(255, 0, 110, 0.04) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 0, 110, 0.04) 1px, transparent 1px);
     background-size: 80px 80px;
@@ -362,15 +350,19 @@ body {
     left: 50%;
 }
 
-.countdown-section, .token-section {
-    padding: 2.5rem 1rem;
+.countdown-section {
+    padding: 2rem 1rem;
     text-align: center;
+    background: linear-gradient(135deg, rgba(255, 0, 110, 0.06), rgba(131, 56, 236, 0.06));
+    border-radius: 24px;
+    border: 1px solid var(--border-glow);
+    margin: 2rem 0;
 }
 
-.countdown-timer, .token-countdown {
+.countdown-timer {
     display: flex;
     justify-content: center;
-    gap: 1.2rem;
+    gap: 1rem;
     flex-wrap: wrap;
     margin-bottom: 1.5rem;
 }
@@ -385,6 +377,7 @@ body {
     border: 1px solid var(--border-glow);
     box-shadow: var(--shadow-secondary);
     min-width: 80px;
+    text-align: center;
 }
 
 .timer-unit span {
@@ -402,6 +395,7 @@ body {
     border-radius: 24px;
     border: 1px solid var(--border-glow);
     margin: 2rem 0;
+    text-align: center;
 }
 
 .token-content {
@@ -422,6 +416,25 @@ body {
     gap: 0.5rem;
 }
 
+.coming-soon {
+    display: block;
+    background: var(--secondary-gradient);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    opacity: 0.9;
+    margin: 0 auto 1.5rem;
+    max-width: fit-content;
+}
+
+.game-card .coming-soon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
 .section {
     padding: 4rem 1rem;
     max-width: 1200px;
@@ -439,6 +452,17 @@ body {
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+.section-description {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .features-grid {
@@ -499,19 +523,6 @@ body {
 .game-card:hover, .game-card:focus-within {
     transform: scale(1.06);
     box-shadow: 0 15px 30px rgba(58, 134, 255, 0.35);
-}
-
-.coming-soon {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: var(--secondary-gradient);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 12px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    opacity: 0.9;
 }
 
 .game-header {
@@ -659,11 +670,6 @@ body {
     flex-wrap: wrap;
 }
 
-.newsletter-form label {
-    font-size: 1rem;
-    color: var(--text-light);
-}
-
 .newsletter-form input {
     padding: 0.7rem 1.4rem;
     border-radius: 50px;
@@ -683,59 +689,49 @@ body {
     .nav-menu {
         display: none;
     }
-    
     .nav-buttons {
         gap: 0.4rem;
     }
-    
     .btn-portal {
         padding: 0.5rem 1rem;
         font-size: 0.9rem;
     }
-    
     .hero {
         height: 85vh;
     }
-    
     .section {
         padding: 3rem 0.8rem;
     }
-    
     .countdown-section, .token-section {
-        padding: 2rem 0.8rem;
+        padding: 1.5rem 0.8rem;
     }
-    
-    .opportunities {
-        padding: 2rem;
-        margin: 1.5rem 0;
+    .countdown-timer {
+        gap: 0.8rem;
     }
-    
-    .opportunities-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-    
-    .hero-title {
-        font-size: clamp(2rem, 5vw, 4rem);
-    }
-    
-    .hero-subtitle {
-        font-size: clamp(1rem, 2vw, 1.5rem);
-    }
-    
     .timer-unit {
         font-size: 1.2rem;
         min-width: 70px;
     }
-    
     .timer-unit span {
         font-size: 1.8rem;
     }
-    
+    .opportunities {
+        padding: 2rem;
+        margin: 1.5rem 0;
+    }
+    .opportunities-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    .hero-title {
+        font-size: clamp(2rem, 5vw, 4rem);
+    }
+    .hero-subtitle {
+        font-size: clamp(1rem, 2vw, 1.5rem);
+    }
     .token-description {
         font-size: 1rem;
     }
-    
     .games-showcase {
         grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
         gap: 1.2rem;
@@ -873,7 +869,6 @@ body {
     .token-section {
         display: none;
     }
-    
     body {
         background: white;
         color: black;

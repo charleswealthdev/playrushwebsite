@@ -57,16 +57,10 @@ function openCareerModal() {
     modal.innerHTML = `
         <div class="modal-content">
             <h2 class="modal-title" id="career-modal-title">Join PlayRush</h2>
-            <p class="modal-description">
-                Passionate about games? Bring your creativity to our team! We need artists, storytellers, and community builders.
-            </p>
+            <p class="modal-description">Passionate about games? Bring your creativity to our team! We need artists, storytellers, and community builders.</p>
             <div class="modal-actions">
-                <a href="mailto:careers@playrush.io" class="modal-email-link">
-                    📧 careers@playrush.io
-                </a>
-                <button onclick="closeModal(this)" class="modal-close-btn" aria-label="Close modal">
-                    Close
-                </button>
+                <a href="mailto:careers@playrush.io" class="modal-email-link">📧 careers@playrush.io</a>
+                <button onclick="closeModal(this)" class="modal-close-btn" aria-label="Close modal">Close</button>
             </div>
         </div>
     `;
@@ -86,16 +80,10 @@ function openPartnershipModal() {
     modal.innerHTML = `
         <div class="modal-content">
             <h2 class="modal-title" id="partnership-modal-title">Partner With Us</h2>
-            <p class="modal-description">
-                Have epic ideas? Let’s team up to create unforgettable gaming adventures!
-            </p>
+            <p class="modal-description">Have epic ideas? Let’s team up to create unforgettable gaming adventures!</p>
             <div class="modal-actions">
-                <a href="mailto:partnerships@playrush.io" class="modal-email-link">
-                    🤝 partnerships@playrush.io
-                </a>
-                <button onclick="closeModal(this)" class="modal-close-btn" aria-label="Close modal">
-                    Close
-                </button>
+                <a href="mailto:partnerships@playrush.io" class="modal-email-link">🤝 partnerships@playrush.io</a>
+                <button onclick="closeModal(this)" class="modal-close-btn" aria-label="Close modal">Close</button>
             </div>
         </div>
     `;
@@ -111,6 +99,32 @@ function closeModal(modal) {
     setTimeout(() => {
         if (modal.parentNode) modal.parentNode.removeChild(modal);
     }, 300);
+}
+
+function startGameCountdown() {
+    const countdown = document.getElementById('countdown-timer');
+    if (!countdown) return;
+    const launchDate = new Date('2025-12-01T00:00:00Z').getTime();
+    let interval;
+    function updateTimer() {
+        const now = new Date().getTime();
+        const distance = launchDate - now;
+        if (distance < 0) {
+            countdown.innerHTML = '<span class="timer-unit">We’re Live! Jump In!</span>';
+            clearInterval(interval);
+            return;
+        }
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        document.getElementById('days').textContent = days.toString().padStart(2, '0');
+        document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+        document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+        document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+    }
+    updateTimer();
+    interval = setInterval(updateTimer, 1000);
 }
 
 document.querySelectorAll('[href*="portal.playrush.io"]').forEach(link => {
@@ -136,7 +150,7 @@ document.querySelector('.newsletter-form')?.addEventListener('submit', async (e)
     const email = e.target.querySelector('#email').value;
     try {
         console.log('Newsletter subscription:', email);
-        alert('You’ve Leveled Up! Ready for PlayRush and our token adventure!');
+        alert('You’ve Leveled Up! Stay tuned for Portal and Token updates!');
         e.target.reset();
     } catch (error) {
         console.error('Subscription failed:', error);
@@ -150,72 +164,6 @@ document.addEventListener('keydown', (e) => {
         if (modal) closeModal(modal);
     }
 });
-
-// Countdown timer for game launch
-function startGameCountdown() {
-    const gameCountdown = document.getElementById('countdown-timer');
-    if (!gameCountdown) return;
-
-    const gameLaunchDate = new Date('2025-12-01T00:00:00Z').getTime();
-    let gameInterval;
-
-    function updateGameTimer() {
-        const now = new Date().getTime();
-        const distance = gameLaunchDate - now;
-
-        if (distance < 0) {
-            gameCountdown.innerHTML = '<span class="timer-unit">We’re Live! Jump In!</span>';
-            clearInterval(gameInterval);
-            return;
-        }
-
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        document.getElementById('days').textContent = days.toString().padStart(2, '0');
-        document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-        document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-        document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-    }
-
-    updateGameTimer();
-    gameInterval = setInterval(updateGameTimer, 1000);
-}
-
-// Countdown timer for token launch
-function startTokenCountdown() {
-    const tokenCountdown = document.getElementById('token-countdown');
-    if (!tokenCountdown) return;
-
-    const tokenLaunchDate = new Date('2026-01-15T00:00:00Z').getTime();
-    let tokenInterval;
-
-    function updateTokenTimer() {
-        const now = new Date().getTime();
-        const distance = tokenLaunchDate - now;
-
-        if (distance < 0) {
-            tokenCountdown.innerHTML = '<span class="timer-unit">Token Live! Join Now!</span>';
-            clearInterval(tokenInterval);
-            return;
-        }
-
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        document.getElementById('token-days').textContent = days.toString().padStart(2, '0');
-        document.getElementById('token-hours').textContent = hours.toString().padStart(2, '0');
-        document.getElementById('token-minutes').textContent = minutes.toString().padStart(2, '0');
-        document.getElementById('token-seconds').textContent = seconds.toString().padStart(2, '0');
-    }
-
-    updateTokenTimer();
-    tokenInterval = setInterval(updateTokenTimer, 1000);
-}
 
 if ('PerformanceObserver' in window) {
     const observer = new PerformanceObserver((entries) => {
@@ -249,7 +197,6 @@ if ('ontouchstart' in window) {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('PlayRush.io initialized successfully');
     startGameCountdown();
-    startTokenCountdown();
 });
 
 window.PlayRush = {
