@@ -3,153 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PlayRush.io - Revolutionary Web3 Gaming Platform</title>
-    <meta name="description" content="Experience the future of gaming with PlayRush - the world's most advanced Web3 gaming ecosystem">
+    <title>PlayRush.io - Epic Games, Cool Rewards</title>
+    <meta name="description" content="PlayRush.io: Dive into epic games, win awesome rewards, and join our upcoming token adventure. Let’s play!">
+    <meta name="keywords" content="fun games, gaming rewards, play and earn, PlayRush, token">
+    <meta name="author" content="PlayRush.io">
     
+    <!-- Open Graph / Twitter Card -->
+    <meta property="og:title" content="PlayRush.io - Epic Games, Cool Rewards">
+    <meta property="og:description" content="Join PlayRush for thrilling games, awesome rewards, and our upcoming token. Start the adventure!">
+    <meta property="og:image" content="https://playrush.io/assets/og-image.jpg">
+    <meta property="og:url" content="https://playrush.io">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@playrushio">
+
     <!-- Preload critical resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     
     <!-- External CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="preload">
-    <div class="bg-matrix"></div>
-    <div class="neural-grid"></div>
+    <div class="bg-matrix" role="presentation"></div>
+    <div class="neural-grid" role="presentation"></div>
 
-    <header class="header">
-        <nav class="nav">
+    <header class="header" role="banner">
+        <nav class="nav" aria-label="Main navigation">
             <div class="logo-container">
-                <div class="logo-img">PR</div>
+                <div class="logo-img" aria-label="PlayRush logo">PR</div>
                 <div class="logo-text">PLAYRUSH</div>
             </div>
             
             <ul class="nav-menu">
                 <li><a href="#home" class="nav-link">Home</a></li>
-                <li><a href="#features" class="nav-link">Features</a></li>
+                <li><a href="#features" class="nav-link">Why PlayRush</a></li>
                 <li><a href="#games" class="nav-link">Games</a></li>
-                <li><a href="#opportunities" class="nav-link">Opportunities</a></li>
-                <li><a href="#contact" class="nav-link">Contact</a></li>
+                <li><a href="#token" class="nav-link">Token</a></li>
+                <li><a href="#opportunities" class="nav-link">Get Involved</a></li>
             </ul>
             
             <div class="nav-buttons">
                 <div class="social-links">
                     <a href="https://twitter.com/playrushio" class="social-link" aria-label="Twitter">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                             <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
                         </svg>
                     </a>
                 </div>
-                <a href="https://portal.playrush.io" class="btn-portal">Enter Portal</a>
+                <a href="https://portal.playrush.io" class="btn-portal" aria-label="Enter PlayRush Portal">Play Now</a>
             </div>
         </nav>
     </header>
 
-    <section id="home" class="hero">
-        <div class="floating-orb orb-1"></div>
-        <div class="floating-orb orb-2"></div>
-        <div class="floating-orb orb-3"></div>
+    <a href="https://portal.playrush.io" class="sticky-cta" aria-label="Play Now Sticky Button">🎮 Play Now</a>
+
+    <section id="home" class="hero" aria-labelledby="hero-title">
+        <div class="floating-orb orb-1" role="presentation"></div>
+        <div class="floating-orb orb-2" role="presentation"></div>
+        <div class="floating-orb orb-3" role="presentation"></div>
         
         <div class="hero-content">
-            <h1 class="hero-title">PLAYRUSH</h1>
-            <p class="hero-subtitle">The Revolutionary Web3 Gaming Ecosystem</p>
+            <h1 class="hero-title" id="hero-title">PLAYRUSH</h1>
+            <p class="hero-subtitle">Epic Games, Awesome Rewards, Coming Token!</p>
             <div class="hero-actions">
-                <a href="https://portal.playrush.io" class="btn-primary">
-                    🚀 Launch Portal
+                <a href="https://portal.playrush.io" class="btn-primary cta-pulse" aria-label="Launch PlayRush Portal">
+                    🚀 Start Playing
                 </a>
-                <a href="#features" class="btn-secondary">
-                    ⚡ Explore Features
+                <a href="#token" class="btn-secondary" aria-label="Join Token Waitlist">
+                    🎉 Join Token Waitlist
+                </a>
+                <a href="#games" class="btn-secondary" aria-label="Explore PlayRush Games">
+                    ⚡ Discover Games
                 </a>
             </div>
         </div>
     </section>
 
-    <section id="features" class="section">
-        <h2 class="section-title scroll-animate">Revolutionary Features</h2>
+    <section id="countdown" class="section countdown-section" aria-labelledby="countdown-title">
+        <h2 class="section-title scroll-animate" id="countdown-title">Adventure Awaits!</h2>
+        <div class="countdown-timer scroll-animate" id="countdown-timer">
+            <span class="timer-unit"><span id="days">00</span> Days</span>
+            <span class="timer-unit"><span id="hours">00</span> Hours</span>
+            <span class="timer-unit"><span id="minutes">00</span> Minutes</span>
+            <span class="timer-unit"><span id="seconds">00</span> Seconds</span>
+        </div>
+    </section>
+
+    <section id="features" class="section" aria-labelledby="features-title">
+        <h2 class="section-title scroll-animate" id="features-title">Why You’ll Love PlayRush</h2>
         <div class="features-grid">
             <div class="feature-card scroll-animate">
-                <div class="feature-icon">⚡</div>
-                <h3 class="feature-title">Lightning Speed</h3>
-                <p class="feature-description">Experience gaming at light speed with our quantum-optimized blockchain infrastructure designed for instantaneous gameplay and zero latency.</p>
+                <div class="feature-icon" aria-hidden="true">🎮</div>
+                <h3 class="feature-title">Thrilling Games</h3>
+                <p class="feature-description">Dive into action-packed games that are easy to learn and fun to master.</p>
             </div>
             <div class="feature-card scroll-animate">
-                <div class="feature-icon">💎</div>
-                <h3 class="feature-title">True Ownership</h3>
-                <p class="feature-description">Own your digital assets completely. Every item, character, and achievement is an NFT that truly belongs to you across our entire ecosystem.</p>
+                <div class="feature-icon" aria-hidden="true">🤝</div>
+                <h3 class="feature-title">Vibrant Community</h3>
+                <p class="feature-description">Team up with friends, join events, and share epic moments globally.</p>
             </div>
             <div class="feature-card scroll-animate">
-                <div class="feature-icon">🌐</div>
-                <h3 class="feature-title">Cross-Chain Mastery</h3>
-                <p class="feature-description">Seamlessly play across multiple blockchains. Your assets and progress work everywhere in the PlayRush multiverse.</p>
+                <div class="feature-icon" aria-hidden="true">🌍</div>
+                <h3 class="feature-title">Play Anywhere</h3>
+                <p class="feature-description">Enjoy seamless gaming on any device, anytime, anywhere.</p>
             </div>
             <div class="feature-card scroll-animate">
-                <div class="feature-icon">🎯</div>
-                <h3 class="feature-title">Play-to-Earn Pro</h3>
-                <p class="feature-description">Transform your gaming skills into real-world value. Earn premium tokens and rare NFTs while dominating the leaderboards.</p>
-            </div>
-            <div class="feature-card scroll-animate">
-                <div class="feature-icon">🛡️</div>
-                <h3 class="feature-title">Quantum Security</h3>
-                <p class="feature-description">Military-grade security protocols protect your assets. Advanced cryptographic technology ensures your progress is always safe.</p>
-            </div>
-            <div class="feature-card scroll-animate">
-                <div class="feature-icon">👑</div>
-                <h3 class="feature-title">Elite Community</h3>
-                <p class="feature-description">Join the most exclusive gaming community. Connect with top players, developers, and creators shaping the future of interactive entertainment.</p>
+                <div class="feature-icon" aria-hidden="true">💰</div>
+                <h3 class="feature-title">Epic Rewards</h3>
+                <p class="feature-description">Win awesome prizes and unlock perks while playing.</p>
             </div>
         </div>
     </section>
 
-    <section id="games" class="section">
-        <h2 class="section-title scroll-animate">Epic Game Universe</h2>
-        <div class="games-showcase">
-            <div class="game-card scroll-animate">
-                <div class="game-header">🌌</div>
+    <section id="games" class="section" aria-labelledby="games-title">
+        <h2 class="section-title scroll-animate" id="games-title">Our Epic Games</h2>
+        <div class="games-showcase" itemscope itemtype="http://schema.org/Game">
+            <div class="game-card scroll-animate" itemprop="itemListElement" itemscope itemtype="http://schema.org/Game">
+                <span class="coming-soon">Coming Soon</span>
+                <img src="/assets/placeholder.jpg" data-src="/assets/chainbros.jpg" alt="ChainBros gameplay" class="game-header lazy" loading="lazy">
                 <div class="game-content">
-                    <h3 class="game-title">Cosmic Dominion</h3>
-                    <p class="game-description">Command fleets of legendary starships in epic space battles. Build your galactic empire and trade exclusive ship NFTs in the ultimate strategy experience.</p>
+                    <h3 class="game-title" itemprop="name">ChainBros</h3>
+                    <p class="game-description" itemprop="description">Dash through vibrant worlds with friends, collecting treasures and dodging obstacles in a Mario-inspired adventure!</p>
                 </div>
             </div>
-            <div class="game-card scroll-animate">
-                <div class="game-header">🐉</div>
+            <div class="game-card scroll-animate" itemprop="itemListElement" itemscope itemtype="http://schema.org/Game">
+                <span class="coming-soon">Coming Soon</span>
+                <img src="/assets/placeholder.jpg" data-src="/assets/pixelhunt.jpg" alt="PixelHunt gameplay" class="game-header lazy" loading="lazy">
                 <div class="game-content">
-                    <h3 class="game-title">Dragon Legends</h3>
-                    <p class="game-description">Embark on mythical quests with legendary dragons. Forge powerful artifacts, build kingdoms, and collect rare dragon eggs as valuable NFTs.</p>
+                    <h3 class="game-title" itemprop="name">PixelHunt</h3>
+                    <p class="game-description" itemprop="description">Explore retro pixel worlds, hunt for hidden loot, and climb leaderboards with your epic finds!</p>
                 </div>
             </div>
-            <div class="game-card scroll-animate">
-                <div class="game-header">🏎️</div>
+            <div class="game-card scroll-animate" itemprop="itemListElement" itemscope itemtype="http://schema.org/Game">
+                <span class="coming-soon">Coming Soon</span>
+                <img src="/assets/placeholder.jpg" data-src="/assets/tankcity.jpg" alt="TankCity gameplay" class="game-header lazy" loading="lazy">
                 <div class="game-content">
-                    <h3 class="game-title">Velocity Unleashed</h3>
-                    <p class="game-description">Race through neon-lit cyberpunk cities with customizable hypercars. Win tournaments, upgrade your garage, and own exclusive vehicle NFTs.</p>
+                    <h3 class="game-title" itemprop="name">TankCity</h3>
+                    <p class="game-description" itemprop="description">Command tanks in intense city battles, upgrade your arsenal, and win big in explosive showdowns!</p>
                 </div>
             </div>
-            <div class="game-card scroll-animate">
-                <div class="game-header">⚔️</div>
+            <div class="game-card scroll-animate" itemprop="itemListElement" itemscope itemtype="http://schema.org/Game">
+                <span class="coming-soon">Coming Soon</span>
+                <img src="/assets/placeholder.jpg" data-src="/assets/thinktactoe.jpg" alt="ThinkTacToe gameplay" class="game-header lazy" loading="lazy">
                 <div class="game-content">
-                    <h3 class="game-title">Battle Nexus</h3>
-                    <p class="game-description">Next-generation battle royale with persistent character evolution. Every victory earns exclusive rewards and legendary status in the arena.</p>
+                    <h3 class="game-title" itemprop="name">ThinkTacToe</h3>
+                    <p class="game-description" itemprop="description">Outsmart opponents in a strategic tic-tac-toe twist, earning rewards with every clever move!</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="opportunities" class="section">
+    <section id="token" class="section token-section" aria-labelledby="token-title">
+        <h2 class="section-title scroll-animate" id="token-title">PlayRush Token</h2>
+        <div class="countdown-timer token-countdown scroll-animate" id="token-countdown">
+            <span class="timer-unit"><span id="token-days">00</span> Days</span>
+            <span class="timer-unit"><span id="token-hours">00</span> Hours</span>
+            <span class="timer-unit"><span id="token-minutes">00</span> Minutes</span>
+            <span class="timer-unit"><span id="token-seconds">00</span> Seconds</span>
+        </div>
+        <div class="token-content scroll-animate">
+            <p class="token-description">Get ready for our PlayRush Token! Power up your gaming with exclusive rewards and perks. Join the waitlist!</p>
+            <a href="#contact" class="btn-primary token-cta" aria-label="Join Token Waitlist">🎉 Join the Waitlist</a>
+        </div>
+    </section>
+
+    <section id="opportunities" class="section" aria-labelledby="opportunities-title">
         <div class="opportunities scroll-animate">
-            <h2 class="section-title">Join the Revolution</h2>
+            <h2 class="section-title" id="opportunities-title">Get Involved</h2>
             <div class="opportunities-grid">
                 <div class="opportunity-card">
-                    <h3 class="opportunity-title">Careers</h3>
-                    <p class="opportunity-description">Shape the future of gaming with us. We're seeking visionary developers, designers, and innovators to build the next generation of interactive entertainment. Join our elite team and create gaming history.</p>
-                    <button class="btn-opportunity" onclick="openCareerModal()">
-                        🚀 Apply Now
+                    <h3 class="opportunity-title">Work With Us</h3>
+                    <p class="opportunity-description">Love gaming? Help us make awesome games! We’re looking for artists, storytellers, community builders, and creative dreamers to craft fun experiences with us.</p>
+                    <button class="btn-opportunity" onclick="openCareerModal()" aria-label="Apply for Careers at PlayRush">
+                        🚀 Join Us
                     </button>
                 </div>
                 <div class="opportunity-card">
-                    <h3 class="opportunity-title">Partnerships</h3>
-                    <p class="opportunity-description">Partner with the gaming revolution. We collaborate with industry leaders, blockchain innovators, and creative studios to expand our ecosystem. Let's build the future together.</p>
-                    <button class="btn-opportunity" onclick="openPartnershipModal()">
+                    <h3 class="opportunity-title">Partner With Us</h3>
+                    <p class="opportunity-description">Got big ideas? Partner with us to bring more fun to players everywhere and create epic gaming adventures together!</p>
+                    <button class="btn-opportunity" onclick="openPartnershipModal()" aria-label="Explore Partnership Opportunities with PlayRush">
                         🤝 Partner With Us
                     </button>
                 </div>
@@ -157,23 +190,29 @@
         </div>
     </section>
 
-    <footer id="contact" class="footer">
+    <footer id="contact" class="footer" role="contentinfo">
         <div class="footer-content">
             <div class="footer-links">
                 <a href="#home" class="footer-link">Home</a>
-                <a href="#features" class="footer-link">Features</a>
+                <a href="#features" class="footer-link">Why PlayRush</a>
                 <a href="#games" class="footer-link">Games</a>
-                <a href="#opportunities" class="footer-link">Opportunities</a>
+                <a href="#token" class="footer-link">Token</a>
+                <a href="#opportunities" class="footer-link">Get Involved</a>
                 <a href="https://portal.playrush.io" class="footer-link">Portal</a>
             </div>
             <div class="footer-social">
                 <a href="https://twitter.com/playrushio" class="social-link" aria-label="Twitter">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                         <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
                     </svg>
                 </a>
             </div>
-            <p class="footer-text">&copy; 2025 PlayRush.io - Pioneering the Revolutionary Future of Web3 Gaming</p>
+            <form class="newsletter-form" action="#" method="post" aria-label="Newsletter Signup">
+                <label for="email" class="footer-text">Level Up Your Inbox:</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required aria-required="true" autocomplete="email">
+                <button type="submit" class="btn-opportunity newsletter-btn">🎮 Level Up!</button>
+            </form>
+            <p class="footer-text">Join our community events for epic fun! &copy; 2025 PlayRush.io - Epic Games, Awesome Rewards</p>
         </div>
     </footer>
 

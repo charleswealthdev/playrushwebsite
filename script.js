@@ -1,180 +1,222 @@
-// Performance optimization - Remove preload class
 window.addEventListener('load', () => {
     document.body.classList.remove('preload');
+    const cta = document.querySelector('.cta-pulse');
+    if (cta) {
+        cta.classList.add('animate');
+        setTimeout(() => cta.classList.remove('animate'), 2000);
+    }
+    const newsletterBtn = document.querySelector('.newsletter-btn');
+    if (newsletterBtn) {
+        newsletterBtn.classList.add('animate-bounce');
+        setTimeout(() => newsletterBtn.classList.remove('animate-bounce'), 3000);
+    }
 });
 
-// Ultra-smooth header scroll effect
 let lastScrollY = 0;
 const header = document.querySelector('.header');
+const stickyCta = document.querySelector('.sticky-cta');
 
-function updateHeader() {
+function updateHeaderAndCta() {
     const scrollY = window.pageYOffset;
-    
-    if (scrollY > 100) {
-        header.classList.add('scrolled');
-    } else {
-        header.classList.remove('scrolled');
-    }
-    
+    header.classList.toggle('scrolled', scrollY > 80);
+    stickyCta.classList.toggle('visible', scrollY > 300);
     lastScrollY = scrollY;
 }
 
-// Throttled scroll handler for performance
-let ticking = false;
 window.addEventListener('scroll', () => {
-    if (!ticking) {
-        requestAnimationFrame(updateHeader);
-        ticking = true;
-        setTimeout(() => { ticking = false; }, 16);
-    }
+    requestAnimationFrame(updateHeaderAndCta);
 });
-
-// Intersection Observer for scroll animations
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
 
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.classList.add('animate');
+            observer.unobserve(entry.target);
         }
     });
-}, observerOptions);
+}, { threshold: 0.1 });
 
-// Observe all scroll-animate elements
-document.querySelectorAll('.scroll-animate').forEach(el => {
-    observer.observe(el);
-});
+document.querySelectorAll('.scroll-animate').forEach(el => observer.observe(el));
 
-// Smooth scrolling for navigation
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
+    anchor.addEventListener('click', (e) => {
         e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
+        const target = document.querySelector(anchor.getAttribute('href'));
         if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     });
 });
 
-// Career application modal
 function openCareerModal() {
     const modal = document.createElement('div');
     modal.className = 'modal-overlay';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-labelledby', 'career-modal-title');
     modal.innerHTML = `
         <div class="modal-content">
-            <h2 class="modal-title">Join PlayRush</h2>
+            <h2 class="modal-title" id="career-modal-title">Join PlayRush</h2>
             <p class="modal-description">
-                Ready to revolutionize gaming? Send your portfolio and resume to our talent acquisition team.
+                Passionate about games? Bring your creativity to our team! We need artists, storytellers, and community builders.
             </p>
             <div class="modal-actions">
                 <a href="mailto:careers@playrush.io" class="modal-email-link">
                     📧 careers@playrush.io
                 </a>
-                <button onclick="closeModal(this)" class="modal-close-btn">
+                <button onclick="closeModal(this)" class="modal-close-btn" aria-label="Close modal">
                     Close
                 </button>
             </div>
         </div>
     `;
     document.body.appendChild(modal);
-    
-    // Close modal when clicking outside
     modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal(modal);
-        }
+        if (e.target === modal) closeModal(modal);
     });
+    modal.querySelector('.modal-content').focus();
 }
 
-// Partnership modal
 function openPartnershipModal() {
     const modal = document.createElement('div');
     modal.className = 'modal-overlay';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-labelledby', 'partnership-modal-title');
     modal.innerHTML = `
         <div class="modal-content">
-            <h2 class="modal-title">Partner With Us</h2>
+            <h2 class="modal-title" id="partnership-modal-title">Partner With Us</h2>
             <p class="modal-description">
-                Let's build the future of gaming together. Reach out to explore partnership opportunities.
+                Have epic ideas? Let’s team up to create unforgettable gaming adventures!
             </p>
             <div class="modal-actions">
                 <a href="mailto:partnerships@playrush.io" class="modal-email-link">
                     🤝 partnerships@playrush.io
                 </a>
-                <button onclick="closeModal(this)" class="modal-close-btn">
+                <button onclick="closeModal(this)" class="modal-close-btn" aria-label="Close modal">
                     Close
                 </button>
             </div>
         </div>
     `;
     document.body.appendChild(modal);
-    
-    // Close modal when clicking outside
     modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal(modal);
-        }
+        if (e.target === modal) closeModal(modal);
     });
+    modal.querySelector('.modal-content').focus();
 }
 
-// Close modal function
-function closeModal(element) {
-    const modal = element.closest('.modal-overlay') || element;
+function closeModal(modal) {
     modal.style.animation = 'fadeOut 0.3s ease';
     setTimeout(() => {
-        if (modal.parentNode) {
-            modal.parentNode.removeChild(modal);
-        }
+        if (modal.parentNode) modal.parentNode.removeChild(modal);
     }, 300);
 }
 
-// Portal tracking
 document.querySelectorAll('[href*="portal.playrush.io"]').forEach(link => {
     link.addEventListener('click', () => {
-        console.log('Portal access initiated - User redirected to gaming portal');
-        // Analytics tracking can be added here
+        console.log('Portal access initiated', {
+            cta: link.textContent || link.className,
+            timestamp: new Date().toISOString()
+        });
     });
 });
 
-// Keyboard navigation support
-document.addEventListener('keydown', (e) => {
-    // Close modal on Escape key
-    if (e.key === 'Escape') {
-        const modal = document.querySelector('.modal-overlay');
-        if (modal) {
-            closeModal(modal);
-        }
-    }
-    
-    // Quick navigation shortcuts
-    if (e.ctrlKey || e.metaKey) {
-        switch (e.key) {
-            case '1':
-                e.preventDefault();
-                document.querySelector('#home')?.scrollIntoView({ behavior: 'smooth' });
-                break;
-            case '2':
-                e.preventDefault();
-                document.querySelector('#features')?.scrollIntoView({ behavior: 'smooth' });
-                break;
-            case '3':
-                e.preventDefault();
-                document.querySelector('#games')?.scrollIntoView({ behavior: 'smooth' });
-                break;
-            case '4':
-                e.preventDefault();
-                document.querySelector('#opportunities')?.scrollIntoView({ behavior: 'smooth' });
-                break;
-        }
+document.querySelectorAll('.token-cta').forEach(link => {
+    link.addEventListener('click', () => {
+        console.log('Token waitlist click', {
+            cta: link.textContent,
+            timestamp: new Date().toISOString()
+        });
+    });
+});
+
+document.querySelector('.newsletter-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = e.target.querySelector('#email').value;
+    try {
+        console.log('Newsletter subscription:', email);
+        alert('You’ve Leveled Up! Ready for PlayRush and our token adventure!');
+        e.target.reset();
+    } catch (error) {
+        console.error('Subscription failed:', error);
+        alert('Oops, something went wrong. Try again later!');
     }
 });
 
-// Performance monitoring
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        const modal = document.querySelector('.modal-overlay');
+        if (modal) closeModal(modal);
+    }
+});
+
+// Countdown timer for game launch
+function startGameCountdown() {
+    const gameCountdown = document.getElementById('countdown-timer');
+    if (!gameCountdown) return;
+
+    const gameLaunchDate = new Date('2025-12-01T00:00:00Z').getTime();
+    let gameInterval;
+
+    function updateGameTimer() {
+        const now = new Date().getTime();
+        const distance = gameLaunchDate - now;
+
+        if (distance < 0) {
+            gameCountdown.innerHTML = '<span class="timer-unit">We’re Live! Jump In!</span>';
+            clearInterval(gameInterval);
+            return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById('days').textContent = days.toString().padStart(2, '0');
+        document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+        document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+        document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+    }
+
+    updateGameTimer();
+    gameInterval = setInterval(updateGameTimer, 1000);
+}
+
+// Countdown timer for token launch
+function startTokenCountdown() {
+    const tokenCountdown = document.getElementById('token-countdown');
+    if (!tokenCountdown) return;
+
+    const tokenLaunchDate = new Date('2026-01-15T00:00:00Z').getTime();
+    let tokenInterval;
+
+    function updateTokenTimer() {
+        const now = new Date().getTime();
+        const distance = tokenLaunchDate - now;
+
+        if (distance < 0) {
+            tokenCountdown.innerHTML = '<span class="timer-unit">Token Live! Join Now!</span>';
+            clearInterval(tokenInterval);
+            return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById('token-days').textContent = days.toString().padStart(2, '0');
+        document.getElementById('token-hours').textContent = hours.toString().padStart(2, '0');
+        document.getElementById('token-minutes').textContent = minutes.toString().padStart(2, '0');
+        document.getElementById('token-seconds').textContent = seconds.toString().padStart(2, '0');
+    }
+
+    updateTokenTimer();
+    tokenInterval = setInterval(updateTokenTimer, 1000);
+}
+
 if ('PerformanceObserver' in window) {
     const observer = new PerformanceObserver((entries) => {
         entries.getEntries().forEach((entry) => {
@@ -186,99 +228,30 @@ if ('PerformanceObserver' in window) {
     observer.observe({ entryTypes: ['navigation'] });
 }
 
-// Lazy load optimization for future content
 if ('IntersectionObserver' in window) {
     const lazyImageObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const img = entry.target;
-                img.src = img.dataset.src;
+                img.src = img.dataset.src || '/assets/placeholder.jpg';
                 img.classList.remove('lazy');
                 lazyImageObserver.unobserve(img);
             }
         });
     });
-
-    document.querySelectorAll('img[data-src]').forEach(img => {
-        lazyImageObserver.observe(img);
-    });
+    document.querySelectorAll('img[data-src]').forEach(img => lazyImageObserver.observe(img));
 }
 
-// Add fade out animation to CSS
-const fadeOutStyle = document.createElement('style');
-fadeOutStyle.textContent = `
-    @keyframes fadeOut {
-        from { opacity: 1; transform: scale(1); }
-        to { opacity: 0; transform: scale(0.9); }
-    }
-`;
-document.head.appendChild(fadeOutStyle);
-
-// Preload critical resources
-const preloadLinks = [
-    'https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap'
-];
-
-preloadLinks.forEach(href => {
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.as = 'style';
-    link.href = href;
-    document.head.appendChild(link);
-});
-
-// Error handling for failed resource loads
-window.addEventListener('error', (e) => {
-    console.warn('PlayRush.io: Resource failed to load:', e.target.src || e.target.href);
-});
-
-// Service Worker registration for caching (optional)
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-            .then((registration) => {
-                console.log('SW registered: ', registration);
-            })
-            .catch((registrationError) => {
-                console.log('SW registration failed: ', registrationError);
-            });
-    });
-}
-
-// Touch device optimizations
 if ('ontouchstart' in window) {
     document.body.classList.add('touch-device');
-    
-    // Add touch-friendly styles
-    const touchStyle = document.createElement('style');
-    touchStyle.textContent = `
-        .touch-device .btn-primary,
-        .touch-device .btn-secondary,
-        .touch-device .btn-opportunity {
-            min-height: 48px;
-            min-width: 48px;
-        }
-        
-        .touch-device .social-link {
-            min-height: 44px;
-            min-width: 44px;
-        }
-    `;
-    document.head.appendChild(touchStyle);
 }
 
-// Initialize everything when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     console.log('PlayRush.io initialized successfully');
-    
-    // Add subtle entrance animations to cards
-    const cards = document.querySelectorAll('.feature-card, .game-card');
-    cards.forEach((card, index) => {
-        card.style.animationDelay = `${index * 0.1}s`;
-    });
+    startGameCountdown();
+    startTokenCountdown();
 });
 
-// Export functions for global access
 window.PlayRush = {
     openCareerModal,
     openPartnershipModal,
