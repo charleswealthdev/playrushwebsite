@@ -874,3 +874,16 @@ body {
         color: black;
     }
 }
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background: #4caf50;
+  color: white;
+  border-radius: 5px;
+  z-index: 1000;
+}
+.toast.error {
+  background: #f44336;
+}

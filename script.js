@@ -146,16 +146,31 @@ document.querySelectorAll('.token-cta').forEach(link => {
 });
 
 document.querySelector('.newsletter-form')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = e.target.querySelector('#email').value;
-    try {
-        console.log('Newsletter subscription:', email);
-        alert('You’ve Leveled Up! Stay tuned for Portal and Token updates!');
-        e.target.reset();
-    } catch (error) {
-        console.error('Subscription failed:', error);
-        alert('Oops, something went wrong. Try again later!');
+  e.preventDefault();
+  const email = e.target.querySelector('#email').value;
+  try {
+    const success = await window.addToWaitlist(email);
+    if (success) {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = 'You’ve Leveled Up! Stay tuned for updates!';
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+      e.target.reset();
     }
+  } catch (error) {
+    const toast = document.createElement('div');
+    toast.className = 'toast error';
+    if (error.message === 'duplicate_email') {
+      toast.textContent = 'This email is already on the waitlist!';
+    } else if (error.message === 'invalid_email') {
+      toast.textContent = 'Please enter a valid email address!';
+    } else {
+      toast.textContent = 'Oops, something went wrong. Try again!';
+    }
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  }
 });
 
 document.addEventListener('keydown', (e) => {
