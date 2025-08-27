@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-require('dotenv').config();
 
 const env = {
   FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
@@ -25,10 +24,3 @@ fs.writeFileSync(path.join(__dirname, 'dist/index.html'), html);
 fs.copyFileSync(path.join(__dirname, 'firebase.js'), path.join(__dirname, 'dist/firebase.js'));
 fs.copyFileSync(path.join(__dirname, 'script.js'), path.join(__dirname, 'dist/script.js'));
 fs.copyFileSync(path.join(__dirname, 'style.css'), path.join(__dirname, 'dist/style.css'));
-
-const assetsDir = path.join(__dirname, 'assets');
-const distAssetsDir = path.join(__dirname, 'dist/assets');
-fs.mkdirSync(distAssetsDir, { recursive: true });
-fs.readdirSync(assetsDir).forEach(file => {
-  fs.copyFileSync(path.join(assetsDir, file), path.join(distAssetsDir, file));
-});
