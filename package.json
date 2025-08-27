@@ -1,12 +1,10 @@
 {
   "scripts": {
-    "build": "node build.js",
-    "start": "serve ."
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "devDependencies": {
-    "serve": "^14.2.4"
-  },
-  "dependencies": {
-    "dotenv": "^17.2.1"
+    "vite": "^5.0.0"
   }
 }
