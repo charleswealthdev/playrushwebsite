@@ -82,7 +82,7 @@ function openPartnershipModal() {
             <h2 class="modal-title" id="partnership-modal-title">Partner With Us</h2>
             <p class="modal-description">Have epic ideas? Let’s team up to create unforgettable gaming adventures!</p>
             <div class="modal-actions">
-                <a href="mailto:partnership@playrush.io" class="modal-email-link">🤝 partnership@playrush.io</a>
+                <a href="mailto:partnerships@playrush.io" class="modal-email-link">🤝 partnerships@playrush.io</a>
                 <button onclick="closeModal(this)" class="modal-close-btn" aria-label="Close modal">Close</button>
             </div>
         </div>
@@ -149,7 +149,7 @@ document.querySelector('.newsletter-form')?.addEventListener('submit', async (e)
   e.preventDefault();
   const email = e.target.querySelector('#email').value;
   try {
-    const success = await window.addToWaitlist(email);
+    const success = await addToWaitlist(email);
     if (success) {
       const toast = document.createElement('div');
       toast.className = 'toast';
@@ -163,8 +163,6 @@ document.querySelector('.newsletter-form')?.addEventListener('submit', async (e)
     toast.className = 'toast error';
     if (error.message === 'duplicate_email') {
       toast.textContent = 'This email is already on the waitlist!';
-    } else if (error.message === 'invalid_email') {
-      toast.textContent = 'Please enter a valid email address!';
     } else {
       toast.textContent = 'Oops, something went wrong. Try again!';
     }
