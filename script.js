@@ -82,7 +82,7 @@ function openPartnershipModal() {
             <h2 class="modal-title" id="partnership-modal-title">Partner With Us</h2>
             <p class="modal-description">Have epic ideas? Let’s team up to create unforgettable gaming adventures!</p>
             <div class="modal-actions">
-                <a href="mailto:partnerships@playrush.io" class="modal-email-link">🤝 partnerships@playrush.io</a>
+                <a href="mailto:partnership@playrush.io" class="modal-email-link">🤝 partnership@playrush.io</a>
                 <button onclick="closeModal(this)" class="modal-close-btn" aria-label="Close modal">Close</button>
             </div>
         </div>
