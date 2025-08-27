@@ -10,9 +10,8 @@
     }
   ],
   "routes": [
-    { "src": "/style.css", "dest": "/dist/style.css" },
-    { "src": "/(firebase|script)\\.js", "dest": "/dist/$1.js" },
     { "src": "/assets/(.*)", "dest": "/dist/assets/$1" },
-    { "src": "/(.*)", "dest": "/dist/index.html" }
+    { "src": "/(.*)", "dest": "/dist/$1" },
+    { "src": "/$", "dest": "/dist/index.html" }
   ]
 }
