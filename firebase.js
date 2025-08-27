@@ -12,12 +12,11 @@ const firebaseConfig = {
   messagingSenderId: "422630877273",
   appId: "1:422630877273:web:c2dff6d221dbf823cd6948",
   measurementId: "G-2827Y2L1T7"
-};
+}; 
 
 try {
   const app = firebase.initializeApp(firebaseConfig);
   
-  // Check if analytics is available before initializing
   let analytics = null;
   if (typeof firebase.analytics === 'function') {
     analytics = firebase.analytics();
