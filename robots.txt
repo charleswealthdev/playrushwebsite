@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://playrush.io/sitemap.xml
