@@ -218,12 +218,12 @@
                         </svg>
                     </a>
                 </div>
-                <a href="#contact" class="btn-portal" aria-label="Get Early Access to PlayRush Portal">Play Now</a>
+                <a href="#contact" class="btn-portal disabled" aria-label="Get Early Access to PlayRush Portal">Play Now</a>
             </div>
         </nav>
     </header>
     
-    <a href="#contact" class="sticky-cta" aria-label="Get Early Access - Sticky Button">🎮 Get Early Access</a>
+    <a href="#contact" class="sticky-cta" aria-label="Get Early Access - Sticky Button">Get Early Access</a>
     
     <main id="main-content">
         <section id="home" class="hero" aria-labelledby="hero-title">
@@ -234,9 +234,9 @@
                 <h1 class="hero-title" id="hero-title">PLAYRUSH</h1>
                 <p class="hero-subtitle">Epic Games, Awesome Rewards, Endless Possibilities</p>
                 <div class="hero-actions">
-                    <a href="#contact" class="btn-primary cta-pulse" aria-label="Get Early Access to PlayRush Portal">🚀 Get Early Access</a>
-                    <a href="#games" class="btn-secondary" aria-label="Explore PlayRush Games Collection">⚡ Discover Games</a>
-                    <a href="#token" class="btn-secondary" aria-label="Join PlayRush Token Waitlist">🎉 Join Waitlist</a>
+                    <a href="#contact" class="btn-primary cta-pulse disabled" aria-label="Get Early Access to PlayRush Portal">Play Now</a>
+                    <a href="#games" class="btn-secondary" aria-label="Explore PlayRush Games Collection">Discover Games</a>
+                    <a href="#contact" class="btn-secondary" aria-label="Join PlayRush Token Waitlist">Join Waitlist</a>
                 </div>
             </div>
         </section>
@@ -250,7 +250,7 @@
                 <span class="timer-unit"><span id="minutes">00</span> Minutes</span>
                 <span class="timer-unit"><span id="seconds">00</span> Seconds</span>
             </div>
-            <a href="#games" class="btn-primary cta-pulse" aria-label="Discover PlayRush Epic Games">⚡ Discover Games</a>
+            <a href="#games" class="btn-primary cta-pulse" aria-label="Discover PlayRush Epic Games">Discover Games</a>
         </section>
         
         <section id="features" class="section" aria-labelledby="features-title">
@@ -333,7 +333,7 @@
             <span class="coming-soon scroll-animate">Exclusive Early Access</span>
             <div class="token-content scroll-animate">
                 <p class="token-description">Be first in line for exclusive access to our upcoming gaming token and innovations. Early supporters get the best rewards and exclusive benefits.</p>
-                <a href="#contact" class="btn-primary token-cta" aria-label="Join PlayRush Token Waitlist">🎉 Secure Your Spot</a>
+                <a href="#contact" class="btn-primary token-cta" aria-label="Join PlayRush Token Waitlist">Secure Your Spot</a>
             </div>
         </section>
         
@@ -344,12 +344,12 @@
                     <article class="opportunity-card">
                         <h3 class="opportunity-title">Work With Us</h3>
                         <p class="opportunity-description">Love gaming? Help us create awesome games! We're looking for talented artists, storytellers, developers, and community builders.</p>
-                        <a href="#contact" class="btn-opportunity" aria-label="Apply for Careers at PlayRush">🚀 Join Our Team</a>
+                        <button class="btn-opportunity disabled" onclick="openCareerModal()" aria-label="Apply for Careers at PlayRush">Join Our Team</button>
                     </article>
                     <article class="opportunity-card">
                         <h3 class="opportunity-title">Partner With Us</h3>
                         <p class="opportunity-description">Got big ideas? Partner with us to create epic gaming adventures and reach new audiences together!</p>
-                        <a href="#contact" class="btn-opportunity" aria-label="Explore Partnership Opportunities with PlayRush">🤝 Partner With Us</a>
+                        <button class="btn-opportunity disabled" onclick="openPartnershipModal()" aria-label="Explore Partnership Opportunities with PlayRush">Partner With Us</button>
                     </article>
                 </div>
             </div>
@@ -381,7 +381,7 @@
                 <div class="admin-only" style="display: none;">
                     <p class="admin-counter">Admin: <span class="admin-count">0</span> total signups</p>
                     <button class="btn-export" onclick="window.exportWaitlist()" title="Export waitlist for marketing">
-                        📊 Export Waitlist
+                        Export Waitlist
                     </button>
                 </div>
             </div>
@@ -391,10 +391,10 @@
                 <label for="email" class="sr-only">Email address</label>
                 <input type="email" id="email" name="email" placeholder="Enter your email for early access" required aria-required="true" autocomplete="email" aria-describedby="email-help">
                 <small id="email-help" class="sr-only">Enter your email to get early access to PlayRush games and token</small>
-                <button type="submit" class="btn-opportunity newsletter-btn">🎮 Get Early Access!</button>
+                <button type="submit" class="btn-opportunity newsletter-btn">Get Early Access!</button>
             </form>
             
-            <p class="footer-text">Something epic is brewing... &copy; 2025 PlayRush.io - Epic Games, Awesome Rewards | <a href="/privacy" class="footer-link">Privacy Policy</a> | <a href="/terms" class="footer-link">Terms of Service</a></p>
+            <p class="footer-text">Something epic is brewing... &copy; 2025 PlayRush.io - Epic Games, Awesome Rewards</p>
         </div>
     </footer>
 
