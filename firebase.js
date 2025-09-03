@@ -4,7 +4,7 @@ if (typeof firebase === 'undefined') {
 }
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBDRh0-RzscjEtDdK_8U0wAgH_9J1GS284",
+  apiKey: "",
   authDomain: "playrushwaitlist.firebaseapp.com",
   projectId: "playrushwaitlist",
   storageBucket: "playrushwaitlist.firebasestorage.app",
@@ -42,8 +42,8 @@ try {
     const countElements = document.querySelectorAll('.waitlist-count');
     const countContainers = document.querySelectorAll('.waitlist-counter');
     
-    // Only show count if >= 100 (change this threshold as needed)
-    if (count >= 100) {
+  
+    if (count >= 500) {
       countElements.forEach(element => {
         element.textContent = count.toLocaleString();
       });
@@ -51,13 +51,13 @@ try {
         container.style.display = 'block';
       });
     } else {
-      // Hide count display but keep for admin
+
       countContainers.forEach(container => {
         container.style.display = 'none';
       });
     }
     
-    // Always update admin-only displays
+   
     const adminCountElements = document.querySelectorAll('.admin-count');
     adminCountElements.forEach(element => {
       element.textContent = count.toLocaleString();
@@ -66,10 +66,10 @@ try {
     return count;
   }
 
-  // Function to check if email exists (alternative approach)
+ 
   async function checkEmailExists(email) {
     try {
-      // Get all emails and check in JavaScript to avoid Firebase query issues
+     
       const snapshot = await db.collection('waitlist').get();
       const normalizedEmail = email.toLowerCase().trim();
       
@@ -88,26 +88,25 @@ try {
     }
   }
 
-  // Function to add email to waitlist
+  
   async function addToWaitlist(email) {
     try {
       const normalizedEmail = email.toLowerCase().trim();
       
-      // Check if email already exists using our custom function
+     
       const emailExists = await checkEmailExists(normalizedEmail);
       if (emailExists) {
         throw new Error('duplicate_email');
       }
 
-      // Add email to waitlist with auto-generated ID
+   
       const docRef = await db.collection('waitlist').add({
         email: normalizedEmail,
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
       });
       
       console.log('Successfully added to waitlist:', normalizedEmail, 'with ID:', docRef.id);
-      
-      // Update count display immediately
+
       setTimeout(() => {
         updateWaitlistCountDisplay();
       }, 500);
@@ -119,7 +118,7 @@ try {
     }
   }
 
-  // Function to export waitlist for marketing/outreach
+
   async function exportWaitlist() {
     try {
       const snapshot = await db.collection('waitlist')
@@ -136,13 +135,12 @@ try {
         });
       });
       
-      // Create CSV content
       const csvContent = 'Email,Timestamp,ID\n' + 
         waitlistData.map(row => 
           `"${row.email}","${row.timestamp}","${row.id}"`
         ).join('\n');
       
-      // Download CSV
+     
       const blob = new Blob([csvContent], { type: 'text/csv' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -162,12 +160,12 @@ try {
     }
   }
 
-  // Initialize count display on page load
+
   document.addEventListener('DOMContentLoaded', () => {
     updateWaitlistCountDisplay();
   });
 
-  // Expose functions to the global scope
+
   window.addToWaitlist = addToWaitlist;
   window.getWaitlistCount = getWaitlistCount;
   window.updateWaitlistCountDisplay = updateWaitlistCountDisplay;

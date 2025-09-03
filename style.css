@@ -77,7 +77,7 @@ body {
     100% { transform: translate(70px, 70px); }
 }
 
-/* Premium Waitlist Banner */
+
 .top-banner-cta {
     position: fixed;
     top: 0;
@@ -1177,7 +1177,6 @@ body {
     transform: scale(1.02);
 }
 
-/* Enhanced Waitlist Stats */
 .waitlist-stats {
     margin: 2rem 0;
     padding: 1.5rem;
@@ -1255,7 +1254,7 @@ body {
     transform: translateY(0);
 }
 
-/* Enhanced Modal Styles */
+
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -1355,7 +1354,7 @@ body {
     transform: scale(1.05);
 }
 
-/* Enhanced Toast Notifications */
+
 .toast {
     position: fixed;
     bottom: 30px;
@@ -1387,7 +1386,7 @@ body {
     to { opacity: 0; transform: scale(0.95); }
 }
 
-/* Enhanced Responsive Design */
+
 @media (max-width: 768px) {
     :root {
         --banner-height: 90px;
@@ -1549,7 +1548,7 @@ body {
     }
 }
 
-/* Performance Optimizations */
+
 .feature-card,
 .game-card,
 .btn-primary,
@@ -1561,7 +1560,7 @@ body {
     will-change: transform;
 }
 
-/* Accessibility Improvements */
+
 @media (prefers-reduced-motion: reduce) {
     .scroll-animate, .hero-content, .cta-pulse, .sticky-cta, .newsletter-btn,
     .bg-matrix, .neural-grid, .floating-orb {
