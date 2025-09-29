@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Primary Meta Tags -->
     <title>PlayRush.io - Community-Powered Gaming Platform | Play, Earn & Connect</title>
     <meta name="title" content="PlayRush.io - Community-Powered Gaming Platform | Play, Earn & Connect">
     <meta name="description" content="Join the community-powered gaming platform. Play exciting games, earn real rewards, and connect with a vibrant community. We're building the future of Web3 gaming together.">
@@ -14,7 +13,6 @@
     
     <link rel="canonical" href="https://playrush.io/">
     
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="PlayRush.io">
     <meta property="og:title" content="PlayRush.io - Community-Powered Gaming Platform">
@@ -22,35 +20,29 @@
     <meta property="og:image" content="assets/LOGO.png">
     <meta property="og:url" content="https://playrush.io">
     
-    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@playrush_io">
     <meta name="twitter:title" content="PlayRush.io - Community-Powered Gaming Platform">
     <meta name="twitter:description" content="Play, earn and connect on the premier community-powered gaming platform. Join thousands of players from around the world.">
     <meta name="twitter:image" content="assets/LOGO.png">
     
-    <!-- Favicons -->
     <link rel="icon" type="image/x-icon" href="/assets/favicon_io/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon_io/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon_io/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon_io/favicon-16x16.png">
     <link rel="manifest" href="/assets/favicon_io/site.webmanifest">
     
-    <!-- Google verification -->
     <meta name="google-site-verification" content="hxScaAh08J5Y2er99rDZHIbt7WYUPi5LOqIbbgo6Npw" />
     
-    <!-- Theme -->
     <meta name="theme-color" content="#ffffff">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="PlayRush">
     
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap"></noscript>
-    
-    <!-- Structured Data -->
+
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -63,14 +55,13 @@
     }
     </script>
     
-   
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="preload">
     
     <div class="top-banner-cta" id="topWaitlistBanner">
         <div class="banner-content">
-            <span class="banner-text">Join the community-powered gaming revolution. Earn  tokens!</span>
+            <span class="banner-text">Join the community-powered gaming revolution. Earn tokens!</span>
             <button class="banner-btn" onclick="scrollToWaitlist()">Join Waitlist</button>
             <button class="banner-close" onclick="closeBanner()" aria-label="Close banner">×</button>
         </div>
@@ -82,13 +73,24 @@
                 <img src="assets/LOGO.png" alt="PlayRush.io Logo" class="logo-img" width="40" height="40">
                 <div class="logo-text">PLAYRUSH</div>
             </div>
-            <ul class="nav-menu" role="menubar">
+            
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            
+            <ul class="nav-menu" id="navMenu" role="menubar">
                 <li><a href="#home" class="nav-link">Home</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
                 <li><a href="#games" class="nav-link">Games</a></li>
                 <li><a href="#community" class="nav-link">Community</a></li>
                 <li><a href="#token-preview" class="nav-link">Token</a></li>
+                <li class="mobile-only"><a href="https://twitter.com/playrush_io" class="nav-link" target="_blank">Twitter</a></li>
+                <li class="mobile-only"><a href="https://t.me/+Ko41EKsStoE5ZmY0" class="nav-link" target="_blank">Telegram</a></li>
+                <li class="mobile-only"><a href="#waitlist" class="btn-primary mobile-cta">Join Waitlist</a></li>
             </ul>
+            
             <div class="nav-buttons">
                 <div class="social-links">
                     <a href="https://twitter.com/playrush_io" class="social-link" aria-label="Follow us on Twitter" rel="noopener noreferrer" target="_blank">
@@ -109,6 +111,14 @@
     
     <a href="#waitlist" class="sticky-cta">Join Waitlist</a>
     
+    <div class="admin-panel admin-only" id="adminPanel">
+        <h3>Admin Panel</h3>
+        <button class="btn-secondary" onclick="exportWaitlist()">Export Waitlist</button>
+        <div class="admin-stats">
+            <div>Waitlist Count: <span id="adminWaitlistCount">0</span></div>
+        </div>
+    </div>
+    
     <main id="main-content">
         <section id="home" class="hero">
             <div class="hero-content">
@@ -116,8 +126,8 @@
                 <p class="hero-subtitle">Play, Earn, Connect</p>
                 <p class="hero-description">Join thousands in the community driven platform. Compete in games, earn real rewards, and shape the future together.</p>
                 <div class="hero-actions">
-                    <a href="#waitlist" class="btn-primary">Join Waitlist Now</a>
-                    <a href="#token-preview" class="btn-secondary">Learn About $PR</a>
+                    <a href="#waitlist" class="btn-primary btn-large">Join Waitlist Now</a>
+                    <a href="#token-preview" class="btn-secondary btn-large">Learn About $PR</a>
                 </div>
             </div>
         </section>
@@ -247,7 +257,7 @@
                 <div class="purchase-actions">
                     <button class="btn-buy" disabled>Buy $PR Now (Coming Soon)</button>
                 </div>
-                <a href="#waitlist" class="btn-primary">Join Waitlist for Early Access</a>
+                <a href="#waitlist" class="btn-primary btn-large">Join Waitlist for Early Access</a>
             </div>
         </section>
     </main>
@@ -298,7 +308,6 @@
         </div>
     </footer>
 
-  
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="firebase.js"></script>
