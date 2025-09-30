@@ -151,11 +151,11 @@ function initWaitlistForm() {
         
         const emailInput = form.querySelector('#email');
         const email = emailInput.value.trim();
-        const submitBtn = document.querySelector('.newsletter-btn');
+        const submitBtn = form.querySelector('.newsletter-btn');
         
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            showToast('Please enter a valid email address', 'error');
+            showToast('Please enter a valid email address.', 'error');
             emailInput.focus();
             return;
         }
@@ -169,6 +169,22 @@ function initWaitlistForm() {
             return;
         }
         
+        // reCAPTCHA v3
+        let recaptchaToken = '';
+        try {
+            if (typeof grecaptcha !== 'undefined') {
+                recaptchaToken = await grecaptcha.execute('6LcGJdorAAAAACUzhoNqCmPmZUEaKwMFq7jMYTWf', { action: 'waitlist_signup' });
+            } else {
+                console.warn('reCAPTCHA not loaded');
+                showToast('Security check unavailable—please try again.', 'error');
+                return;
+            }
+        } catch (error) {
+            console.error('reCAPTCHA error:', error);
+            showToast('Security check failed—please try again.', 'error');
+            return;
+        }
+        
         const originalText = submitBtn.textContent;
         submitBtn.textContent = 'Joining...';
         submitBtn.disabled = true;
@@ -178,29 +194,37 @@ function initWaitlistForm() {
         try {
             if (typeof window.PlayRushWaitlist?.addToWaitlist === 'function') {
                 console.log('Calling addToWaitlist with email:', email);
-                const success = await window.PlayRushWaitlist.addToWaitlist(email);
+                const clientData = {
+                    honeypot: honeypot || '',
+                    submitTime: submitTime,
+                    formLoadTime: window.formLoadTime || 0,
+                    recaptchaToken: recaptchaToken
+                };
+                const success = await window.PlayRushWaitlist.addToWaitlist(email, clientData);
                 if (success) {
                     console.log('Waitlist join successful');
-                    showToast('Welcome to the community! Joining Telegram community...');
+                    showToast('Welcome to the PlayRush community! Joining Telegram...');
                     form.reset();
                     await updateWaitlistCounter();
                     shouldRedirect = true;
                 } else {
                     console.warn('addToWaitlist returned false');
-                    showToast('Join unsuccessful, please try again', 'error');
+                    showToast('Unable to join waitlist—please try again.', 'error');
                 }
             } else {
                 console.warn('addToWaitlist not available');
-                showToast('Database unavailable. Please try again later.', 'error');
+                showToast('Unable to connect to our database—please try again later.', 'error');
             }
         } catch (error) {
             console.error('Waitlist error:', error);
-            let errorMessage = 'Something went wrong. Please try again.';
+            let errorMessage = 'Something went wrong—please try again.';
             
             if (error.message === 'duplicate_email') {
-                errorMessage = 'You\'re already in the community!';
-            } else if (error.code === 'resource-exhausted') {
-                errorMessage = 'Database quota exceeded. Try again tomorrow or upgrade plan.';
+                errorMessage = 'You’re already on our waitlist!';
+            } else if (error.message.includes('full today')) {
+                errorMessage = error.message;
+            } else if (error.message.includes('Invalid submission') || error.message.includes('Security check')) {
+                errorMessage = error.message;
             }
             
             showToast(errorMessage, 'error');
