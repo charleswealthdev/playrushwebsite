@@ -133,14 +133,25 @@ function initSmoothScrolling() {
 
 function initWaitlistForm() {
     const form = document.querySelector('.newsletter-form');
-    if (!form) return;
+    if (!form) {
+        console.error('Newsletter form not found');
+        return;
+    }
     
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
+        // Honeypot check
+        const honeypot = form.querySelector('#honeypot')?.value.trim();
+        if (honeypot && honeypot !== '') {
+            console.warn('Bot detected via honeypot');
+            showToast('Invalid submission detected.', 'error');
+            return;
+        }
+        
         const emailInput = form.querySelector('#email');
         const email = emailInput.value.trim();
-        const submitBtn = form.querySelector('.newsletter-btn');
+        const submitBtn = document.querySelector('.newsletter-btn');
         
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
@@ -149,22 +160,38 @@ function initWaitlistForm() {
             return;
         }
         
+        // Time-based throttling
+        const submitTime = Date.now();
+        const timeElapsed = submitTime - (window.formLoadTime || 0);
+        if (timeElapsed < 5000) {
+            console.warn('Bot detected via timing:', timeElapsed + 'ms');
+            showToast('Please wait a moment before submitting.', 'error');
+            return;
+        }
+        
         const originalText = submitBtn.textContent;
         submitBtn.textContent = 'Joining...';
         submitBtn.disabled = true;
         
+        let shouldRedirect = false;
+        
         try {
-            if (typeof addToWaitlist === 'function') {
-                const success = await addToWaitlist(email);
+            if (typeof window.PlayRushWaitlist?.addToWaitlist === 'function') {
+                console.log('Calling addToWaitlist with email:', email);
+                const success = await window.PlayRushWaitlist.addToWaitlist(email);
                 if (success) {
-                    showToast('Welcome to the community! Check your email for $PR updates.');
+                    console.log('Waitlist join successful');
+                    showToast('Welcome to the community! Joining Telegram community...');
                     form.reset();
-                    updateWaitlistCounter();
+                    await updateWaitlistCounter();
+                    shouldRedirect = true;
+                } else {
+                    console.warn('addToWaitlist returned false');
+                    showToast('Join unsuccessful, please try again', 'error');
                 }
             } else {
-                console.log('Email submitted:', email);
-                showToast('Thanks for joining! We\'ll be in touch soon.');
-                form.reset();
+                console.warn('addToWaitlist not available');
+                showToast('Database unavailable. Please try again later.', 'error');
             }
         } catch (error) {
             console.error('Waitlist error:', error);
@@ -172,12 +199,21 @@ function initWaitlistForm() {
             
             if (error.message === 'duplicate_email') {
                 errorMessage = 'You\'re already in the community!';
+            } else if (error.code === 'resource-exhausted') {
+                errorMessage = 'Database quota exceeded. Try again tomorrow or upgrade plan.';
             }
             
             showToast(errorMessage, 'error');
         } finally {
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
+        }
+        
+        if (shouldRedirect) {
+            setTimeout(() => {
+                console.log('Redirecting to Telegram...');
+                window.open('https://t.me/+JXjfc9bgieo5NTU0', '_blank');
+            }, 2000);
         }
     });
 }
@@ -197,30 +233,42 @@ function showToast(message, type = 'success') {
 }
 
 async function updateWaitlistCounter() {
-    const counterElement = document.querySelector('.waitlist-count');
-    const counterContainer = document.querySelector('.waitlist-counter');
-    const adminCountElement = document.getElementById('adminWaitlistCount');
-    
     try {
-        let count = window.playrushState.waitlistCount;
-        
-        if (typeof getWaitlistCount === 'function') {
-            count = await getWaitlistCount();
+        let count = 0;
+        if (typeof window.PlayRushWaitlist?.getWaitlistCount === 'function') {
+            count = await window.PlayRushWaitlist.getWaitlistCount();
             window.playrushState.waitlistCount = count;
         }
-        
+        const counterElement = document.querySelector('.waitlist-count');
+        const counterContainer = document.querySelector('.waitlist-counter');
+        const adminCountElement = document.getElementById('adminWaitlistCount');
         if (count > 0) {
             if (counterElement && counterContainer) {
                 counterElement.textContent = count.toLocaleString();
                 counterContainer.style.display = 'block';
             }
-            
             if (adminCountElement) {
                 adminCountElement.textContent = count.toLocaleString();
             }
+        } else {
+            if (counterContainer) {
+                counterContainer.style.display = 'none';
+            }
+        }
+        // Warn if nearing write quota (20K daily on Spark plan)
+        if (count > 18000) {
+            showToast('Waitlist growing fast—nearing daily limit!', 'warning');
         }
     } catch (error) {
         console.error('Error updating waitlist counter:', error);
+        if (error.code === 'resource-exhausted') {
+            window.playrushState.waitlistCount = 0;
+            const counterContainer = document.querySelector('.waitlist-counter');
+            if (counterContainer) {
+                counterContainer.style.display = 'none';
+            }
+            showToast('Unable to update waitlist count due to quota limits.', 'error');
+        }
     }
 }
 
@@ -235,59 +283,6 @@ function enableAdminMode() {
     showToast('Admin mode enabled');
     console.log('PlayRush admin mode activated');
     updateWaitlistCounter();
-}
-
-async function exportWaitlist() {
-    if (!window.playrushState.adminMode) {
-        console.warn('Admin access required');
-        showToast('Admin access required', 'error');
-        return;
-    }
-    
-    try {
-        if (typeof exportWaitlistData === 'function') {
-            const data = await exportWaitlistData();
-            
-            if (data && data.length > 0) {
-                const csvContent = "data:text/csv;charset=utf-8," 
-                    + "Email,Date Added,Source\n"
-                    + data.map(item => `${item.email},${item.dateAdded},${item.source || 'website'}`).join("\n");
-                
-                const encodedUri = encodeURI(csvContent);
-                const link = document.createElement("a");
-                link.setAttribute("href", encodedUri);
-                link.setAttribute("download", `playrush_waitlist_${new Date().toISOString().split('T')[0]}.csv`);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                
-                showToast(`Exported ${data.length} waitlist entries`);
-            } else {
-                showToast('No waitlist data found', 'error');
-            }
-        } else {
-            const fallbackData = [
-                { email: 'example@test.com', dateAdded: new Date().toISOString(), source: 'website' }
-            ];
-            
-            const csvContent = "data:text/csv;charset=utf-8," 
-                + "Email,Date Added,Source\n"
-                + fallbackData.map(item => `${item.email},${item.dateAdded},${item.source}`).join("\n");
-            
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `playrush_waitlist_${new Date().toISOString().split('T')[0]}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            showToast('Export function demo - check downloads');
-        }
-    } catch (error) {
-        console.error('Export error:', error);
-        showToast('Export failed: ' + error.message, 'error');
-    }
 }
 
 function initPerformanceMonitoring() {
@@ -409,6 +404,7 @@ function initEventListeners() {
     
     document.addEventListener('DOMContentLoaded', () => {
         console.log('PlayRush initialized');
+        window.formLoadTime = Date.now(); 
         
         showBanner();
         initSmoothScrolling();
@@ -448,14 +444,11 @@ function trackEvent(event, data = {}) {
     }
 }
 
-window.exportWaitlist = exportWaitlist;
-
 window.PlayRush = {
     scrollToWaitlist,
     showToast,
     trackEvent,
     enableAdminMode,
-    exportWaitlist,
     toggleMobileMenu,
     closeMobileMenu
 };

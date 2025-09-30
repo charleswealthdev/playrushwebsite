@@ -4,7 +4,7 @@ if (typeof firebase === 'undefined') {
 }
 
 const firebaseConfig = {
-  apiKey: "",
+  apiKey: "AIzaSyBDRh0-RzscjEtDdK_8U0wAgH_9J1GS284",
   authDomain: "playrushwaitlist.firebaseapp.com",
   projectId: "playrushwaitlist",
   storageBucket: "playrushwaitlist.firebasestorage.app",
