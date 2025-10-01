@@ -140,8 +140,8 @@ async function handleEmailVerification() {
             await window.PlayRushWaitlist.verifyAndAddToWaitlist(email);
             showToast('Welcome to the PlayRush community! Joining Telegram...', 'success');
             setTimeout(() => {
-                window.open('https://t.me/+Ko41EKsStoE5ZmY0', '_blank');
-                window.location.href = window.location.pathname; // Clear query params
+                window.open('https://t.me/+JXjfc9bgieo5NTU0', '_blank');
+                window.location.href = window.location.pathname; 
             }, 2000);
         } catch (error) {
             console.error('Verification error:', error);
