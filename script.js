@@ -11,7 +11,6 @@ function scrollToWaitlist() {
             behavior: 'smooth', 
             block: 'start' 
         });
-        
         setTimeout(() => {
             const emailInput = document.getElementById('email');
             if (emailInput) {
@@ -27,7 +26,6 @@ function closeBanner() {
         banner.style.transform = 'translateY(-100%)';
         document.body.classList.remove('banner-visible');
         window.playrushState.bannerClosed = true;
-        
         setTimeout(() => {
             const header = document.querySelector('.header');
             if (header) {
@@ -54,12 +52,7 @@ function toggleMobileMenu() {
     if (hamburger && navMenu) {
         hamburger.classList.toggle('active');
         navMenu.classList.toggle('active');
-        
-        if (navMenu.classList.contains('active')) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = '';
-        }
+        document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
     }
 }
 
@@ -117,7 +110,6 @@ function initSmoothScrolling() {
             
             if (target) {
                 closeMobileMenu();
-                
                 const headerHeight = document.querySelector('.header')?.offsetHeight || 0;
                 const bannerHeight = document.body.classList.contains('banner-visible') ? 70 : 0;
                 const offsetTop = target.offsetTop - headerHeight - bannerHeight - 20;
@@ -131,6 +123,38 @@ function initSmoothScrolling() {
     });
 }
 
+async function handleEmailVerification() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('verified') === 'true' && firebase.auth().isSignInWithEmailLink(window.location.href)) {
+        let email = window.localStorage.getItem('emailForSignIn');
+        if (!email) {
+            email = window.prompt('Please provide your email for confirmation');
+        }
+        if (!email) {
+            showToast('Email verification cancelled.', 'error');
+            return;
+        }
+        try {
+            await firebase.auth().signInWithEmailLink(email, window.location.href);
+            window.localStorage.removeItem('emailForSignIn');
+            await window.PlayRushWaitlist.verifyAndAddToWaitlist(email);
+            showToast('Welcome to the PlayRush community! Joining Telegram...', 'success');
+            setTimeout(() => {
+                window.open('https://t.me/+Ko41EKsStoE5ZmY0', '_blank');
+                window.location.href = window.location.pathname; // Clear query params
+            }, 2000);
+        } catch (error) {
+            console.error('Verification error:', error);
+            let errorMessage = 'Failed to verify email. Please try again.';
+            if (error.message === 'duplicate_email') {
+                errorMessage = 'You’re already on our waitlist!';
+            }
+            showToast(errorMessage, 'error');
+            window.location.href = window.location.pathname; // Clear query params
+        }
+    }
+}
+
 function initWaitlistForm() {
     const form = document.querySelector('.newsletter-form');
     if (!form) {
@@ -141,9 +165,8 @@ function initWaitlistForm() {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        // Honeypot check
-        const honeypot = form.querySelector('#honeypot')?.value.trim();
-        if (honeypot && honeypot !== '') {
+        const honeypot = form.querySelector('#honeypot')?.value.trim() || '';
+        if (honeypot) {
             console.warn('Bot detected via honeypot');
             showToast('Invalid submission detected.', 'error');
             return;
@@ -160,7 +183,6 @@ function initWaitlistForm() {
             return;
         }
         
-        // Time-based throttling
         const submitTime = Date.now();
         const timeElapsed = submitTime - (window.formLoadTime || 0);
         if (timeElapsed < 5000) {
@@ -169,88 +191,40 @@ function initWaitlistForm() {
             return;
         }
         
-        // reCAPTCHA v3
-        let recaptchaToken = '';
-        try {
-            if (typeof grecaptcha !== 'undefined') {
-                recaptchaToken = await grecaptcha.execute('6LcGJdorAAAAACUzhoNqCmPmZUEaKwMFq7jMYTWf', { action: 'waitlist_signup' });
-            } else {
-                console.warn('reCAPTCHA not loaded');
-                showToast('Security check unavailable—please try again.', 'error');
-                return;
-            }
-        } catch (error) {
-            console.error('reCAPTCHA error:', error);
-            showToast('Security check failed—please try again.', 'error');
-            return;
-        }
-        
         const originalText = submitBtn.textContent;
-        submitBtn.textContent = 'Joining...';
+        submitBtn.textContent = 'Sending...';
         submitBtn.disabled = true;
         
-        let shouldRedirect = false;
-        
         try {
-            if (typeof window.PlayRushWaitlist?.addToWaitlist === 'function') {
-                console.log('Calling addToWaitlist with email:', email);
-                const clientData = {
-                    honeypot: honeypot || '',
-                    submitTime: submitTime,
-                    formLoadTime: window.formLoadTime || 0,
-                    recaptchaToken: recaptchaToken
-                };
-                const success = await window.PlayRushWaitlist.addToWaitlist(email, clientData);
-                if (success) {
-                    console.log('Waitlist join successful');
-                    showToast('Welcome to the PlayRush community! Joining Telegram...');
-                    form.reset();
-                    await updateWaitlistCounter();
-                    shouldRedirect = true;
-                } else {
-                    console.warn('addToWaitlist returned false');
-                    showToast('Unable to join waitlist—please try again.', 'error');
-                }
-            } else {
-                console.warn('addToWaitlist not available');
-                showToast('Unable to connect to our database—please try again later.', 'error');
-            }
+            const clientData = {
+                honeypot,
+                submitTime,
+                formLoadTime: window.formLoadTime || 0
+            };
+            const result = await window.PlayRushWaitlist.addToWaitlist(email, clientData);
+            window.localStorage.setItem('emailForSignIn', email);
+            showToast(result.message, 'success');
+            form.reset();
         } catch (error) {
             console.error('Waitlist error:', error);
-            let errorMessage = 'Something went wrong—please try again.';
-            
+            let errorMessage = error.message;
             if (error.message === 'duplicate_email') {
                 errorMessage = 'You’re already on our waitlist!';
-            } else if (error.message.includes('full today')) {
-                errorMessage = error.message;
-            } else if (error.message.includes('Invalid submission') || error.message.includes('Security check')) {
-                errorMessage = error.message;
             }
-            
             showToast(errorMessage, 'error');
         } finally {
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
-        }
-        
-        if (shouldRedirect) {
-            setTimeout(() => {
-                console.log('Redirecting to Telegram...');
-                window.open('https://t.me/+JXjfc9bgieo5NTU0', '_blank');
-            }, 2000);
         }
     });
 }
 
 function showToast(message, type = 'success') {
     document.querySelectorAll('.toast').forEach(toast => toast.remove());
-    
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
     toast.textContent = message;
-    
     document.body.appendChild(toast);
-    
     setTimeout(() => {
         toast.remove();
     }, type === 'error' ? 5000 : 4000);
@@ -258,15 +232,12 @@ function showToast(message, type = 'success') {
 
 async function updateWaitlistCounter() {
     try {
-        let count = 0;
-        if (typeof window.PlayRushWaitlist?.getWaitlistCount === 'function') {
-            count = await window.PlayRushWaitlist.getWaitlistCount();
-            window.playrushState.waitlistCount = count;
-        }
+        const count = await window.PlayRushWaitlist.getWaitlistCount();
+        window.playrushState.waitlistCount = count;
         const counterElement = document.querySelector('.waitlist-count');
         const counterContainer = document.querySelector('.waitlist-counter');
         const adminCountElement = document.getElementById('adminWaitlistCount');
-        if (count > 0) {
+        if (count >= 500) {
             if (counterElement && counterContainer) {
                 counterElement.textContent = count.toLocaleString();
                 counterContainer.style.display = 'block';
@@ -279,7 +250,6 @@ async function updateWaitlistCounter() {
                 counterContainer.style.display = 'none';
             }
         }
-        // Warn if nearing write quota (20K daily on Spark plan)
         if (count > 18000) {
             showToast('Waitlist growing fast—nearing daily limit!', 'warning');
         }
@@ -298,12 +268,10 @@ async function updateWaitlistCounter() {
 
 function enableAdminMode() {
     window.playrushState.adminMode = true;
-    
     const adminElements = document.querySelectorAll('.admin-only');
     adminElements.forEach(element => {
         element.style.display = 'block';
     });
-    
     showToast('Admin mode enabled');
     console.log('PlayRush admin mode activated');
     updateWaitlistCounter();
@@ -337,7 +305,6 @@ function initImageLazyLoading() {
                 }
             });
         });
-        
         document.querySelectorAll('img[data-src]').forEach(img => {
             imageObserver.observe(img);
         });
@@ -350,12 +317,10 @@ function initKeyboardShortcuts() {
             e.preventDefault();
             enableAdminMode();
         }
-        
         if (e.ctrlKey && e.key === 'w') {
             e.preventDefault();
             scrollToWaitlist();
         }
-        
         if (e.key === 'Escape') {
             closeMobileMenu();
         }
@@ -365,16 +330,13 @@ function initKeyboardShortcuts() {
 function initTouchOptimizations() {
     if ('ontouchstart' in window) {
         document.body.classList.add('touch-device');
-        
         const interactiveElements = document.querySelectorAll(
             '.btn-primary, .btn-secondary, .game-card, .social-link'
         );
-        
         interactiveElements.forEach(el => {
             el.addEventListener('touchstart', () => {
                 el.style.transform = 'scale(0.98)';
             }, { passive: true });
-            
             el.addEventListener('touchend', () => {
                 setTimeout(() => {
                     el.style.transform = '';
@@ -390,13 +352,11 @@ function initMobileMenu() {
     
     if (hamburger && navMenu) {
         hamburger.addEventListener('click', toggleMobileMenu);
-        
         navMenu.addEventListener('click', (e) => {
             if (e.target.classList.contains('nav-link')) {
                 closeMobileMenu();
             }
         });
-        
         document.addEventListener('click', (e) => {
             if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
                 if (navMenu.classList.contains('active')) {
@@ -428,8 +388,7 @@ function initEventListeners() {
     
     document.addEventListener('DOMContentLoaded', () => {
         console.log('PlayRush initialized');
-        window.formLoadTime = Date.now(); 
-        
+        window.formLoadTime = Date.now();
         showBanner();
         initSmoothScrolling();
         initWaitlistForm();
@@ -438,16 +397,14 @@ function initEventListeners() {
         initTouchOptimizations();
         initMobileMenu();
         updateWaitlistCounter();
-        
+        handleEmailVerification();
         document.querySelectorAll('.scroll-animate').forEach(el => {
             observer.observe(el);
         });
-        
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('admin') === 'playrush2025') {
             enableAdminMode();
         }
-        
         setTimeout(() => {
             const elementsInView = document.querySelectorAll('.scroll-animate');
             elementsInView.forEach((el) => {
@@ -462,7 +419,6 @@ function initEventListeners() {
 
 function trackEvent(event, data = {}) {
     console.log('Event:', event, data);
-    
     if (typeof gtag !== 'undefined') {
         gtag('event', event, data);
     }
