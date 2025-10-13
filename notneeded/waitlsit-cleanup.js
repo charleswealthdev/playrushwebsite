@@ -6,7 +6,7 @@ const { DateTime } = require('luxon');
 const inputFile = 'playrush_waitlister.csv';
 const outputFile = 'playrush_waitlister_cleaned.csv';
 
-// Read and parse CSV
+
 const records = [];
 
 fs.createReadStream(inputFile)
