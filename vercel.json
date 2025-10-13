@@ -11,6 +11,14 @@
       "dest": "/style.css"
     },
     {
+      "src": "/supabase.js",
+      "dest": "/supabase.js"
+    },
+    {
+      "src": "/script.js",
+      "dest": "/script.js"
+    },
+    {
       "src": "/assets/(.*)",
       "dest": "/assets/$1"
     },

@@ -15,9 +15,7 @@ window.playrushState = {
   waitlistCount: 0
 };
 
-// =============================================
 // Initialize Supabase
-// =============================================
 function initSupabase() {
   if (
     typeof window.supabase === 'undefined' ||
@@ -37,9 +35,7 @@ function initSupabase() {
   }
 }
 
-// =============================================
 // Toast Notification
-// =============================================
 function showToast(message, type = 'success') {
   const container = document.createElement('div');
   container.id = 'toastContainer';
@@ -69,9 +65,7 @@ function showToast(message, type = 'success') {
   }, type === 'error' ? 5000 : 4000);
 }
 
-// =============================================
 // Smooth Scrolling & Mobile Menu
-// =============================================
 function scrollToWaitlist() {
   const waitlist = document.getElementById('waitlist');
   if (waitlist) {
@@ -131,9 +125,7 @@ function initSmoothScrolling() {
   });
 }
 
-// =============================================
 // Banner
-// =============================================
 function showBanner() {
   const banner = document.getElementById('topWaitlistBanner');
   const bannerClosed = localStorage.getItem('bannerClosed');
@@ -159,9 +151,7 @@ function closeBanner() {
   }
 }
 
-// =============================================
 // Waitlist Counter
-// =============================================
 async function getWaitlistCount() {
   if (!supabase) return 0;
   try {
@@ -198,9 +188,7 @@ async function updateWaitlistCounter() {
   }
 }
 
-// =============================================
 // Email Verification
-// =============================================
 async function handleEmailVerification() {
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('verified') !== 'true') return;
@@ -255,9 +243,7 @@ async function handleEmailVerification() {
   }
 }
 
-// =============================================
 // Waitlist Submission
-// =============================================
 async function handleWaitlistSubmit(e) {
   e.preventDefault();
 
@@ -310,7 +296,6 @@ async function handleWaitlistSubmit(e) {
       return;
     }
 
-    // Force production URL in production, allow local for dev
     const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     const redirectBase = isDev ? window.location.origin : 'https://test.playrush.io';
     const redirectURL = `${redirectBase}/?verified=true`;
@@ -347,9 +332,7 @@ async function handleWaitlistSubmit(e) {
   }
 }
 
-// =============================================
 // Admin Panel
-// =============================================
 async function exportWaitlist() {
   if (!supabase || !window.playrushState.adminMode) {
     showToast('Admin access required.', 'error');
@@ -375,9 +358,7 @@ async function exportWaitlist() {
   }
 }
 
-// =============================================
 // Scroll Header and Sticky CTA
-// =============================================
 let lastScrollY = 0;
 let ticking = false;
 
@@ -398,9 +379,7 @@ function updateHeaderAndCta() {
   ticking = false;
 }
 
-// =============================================
 // Intersection Observer for Animations
-// =============================================
 const observerOptions = {
   threshold: 0.1,
   rootMargin: '0px 0px -50px 0px'
@@ -415,9 +394,7 @@ const observer = new IntersectionObserver((entries) => {
   });
 }, observerOptions);
 
-// =============================================
 // Initialize Features
-// =============================================
 function initImageLazyLoading() {
   if ('IntersectionObserver' in window) {
     const imageObserver = new IntersectionObserver((entries) => {
@@ -498,9 +475,7 @@ function initPerformanceMonitoring() {
   }
 }
 
-// =============================================
 // PlayRushWaitlist Object
-// =============================================
 window.PlayRushWaitlist = {
   addToWaitlist: async (email, clientData) => {
     if (!supabase) throw new Error('Supabase not initialized');
@@ -550,11 +525,14 @@ window.PlayRushWaitlist = {
   exportWaitlist: exportWaitlist
 };
 
-// =============================================
 // Initialize
-// =============================================
 document.addEventListener('DOMContentLoaded', async () => {
   console.log('🚀 PlayRush initializing...');
+
+  // Remove stray hash
+  if (window.location.hash === '#') {
+    window.history.replaceState({}, '', window.location.pathname);
+  }
 
   let attempts = 0;
   while (typeof window.supabase === 'undefined' && attempts < 50) {
