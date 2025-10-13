@@ -7,6 +7,10 @@
   ],
   "routes": [
     {
+      "src": "/style.css",
+      "dest": "/style.css"
+    },
+    {
       "src": "/assets/(.*)",
       "dest": "/assets/$1"
     },
