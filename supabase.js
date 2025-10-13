@@ -312,7 +312,7 @@ async function handleWaitlistSubmit(e) {
 
     // Force production URL in production, allow local for dev
     const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    const redirectBase = isDev ? window.location.origin : 'https://playrush.io';
+    const redirectBase = isDev ? window.location.origin : 'https://test.playrush.io';
     const redirectURL = `${redirectBase}/?verified=true`;
 
     console.log('🔗 Email redirect:', redirectURL);
@@ -512,7 +512,7 @@ window.PlayRushWaitlist = {
       .maybeSingle();
     if (existingEmail) throw new Error('duplicate_email');
     const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    const redirectBase = isDev ? window.location.origin : 'https://playrush.io';
+    const redirectBase = isDev ? window.location.origin : 'https://test.playrush.io';
     const redirectURL = `${redirectBase}/?verified=true`;
     const { error } = await supabase.auth.signInWithOtp({
       email,
