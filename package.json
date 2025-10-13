@@ -7,6 +7,25 @@
     "serve": "^14.2.0"
   },
   "dependencies": {
-    "firebase-admin": "^13.5.0"
-  }
+    "csv-parse": "^6.1.0",
+    "csv-parser": "^3.2.0",
+    "csv-stringify": "^6.6.0",
+    "firebase-admin": "^13.5.0",
+    "luxon": "^3.7.2"
+  },
+  "name": "playrush-website",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/charleswealthdev/playrushmarketing.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/charleswealthdev/playrushmarketing/issues"
+  },
+  "homepage": "https://github.com/charleswealthdev/playrushmarketing#readme"
 }

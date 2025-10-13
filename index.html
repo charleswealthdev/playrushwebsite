@@ -3,46 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://cdn.jsdelivr.net https://unpkg.com;">
     <title>PlayRush.io - Community-Powered Gaming Platform | Play, Earn & Connect</title>
     <meta name="title" content="PlayRush.io - Community-Powered Gaming Platform | Play, Earn & Connect">
     <meta name="description" content="Join the community-powered gaming platform. Play exciting games, earn real rewards, and connect with a vibrant community. We're building the future of Web3 gaming together.">
     <meta name="keywords" content="gaming platform, games, esports, play to earn, gaming rewards, gaming community, PlayRush">
     <meta name="author" content="PlayRush.io">
     <meta name="robots" content="index, follow">
-    
     <link rel="canonical" href="https://playrush.io/">
-    
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="PlayRush.io">
     <meta property="og:title" content="PlayRush.io - Community-Powered Gaming Platform">
     <meta property="og:description" content="Play, earn and connect on the premier community-powered gaming platform. Join thousands of players from around the world.">
-    <meta property="og:image" content="assets/LOGO.png">
+    <meta property="og:image" content="/assets/LOGO.png">
     <meta property="og:url" content="https://playrush.io">
-    
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@playrush_io">
     <meta name="twitter:title" content="PlayRush.io - Community-Powered Gaming Platform">
     <meta name="twitter:description" content="Play, earn and connect on the premier community-powered gaming platform. Join thousands of players from around the world.">
-    <meta name="twitter:image" content="assets/LOGO.png">
-    
+    <meta name="twitter:image" content="/assets/LOGO.png">
     <link rel="icon" type="image/x-icon" href="/assets/favicon_io/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon_io/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon_io/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon_io/favicon-16x16.png">
     <link rel="manifest" href="/assets/favicon_io/site.webmanifest">
-    
     <meta name="google-site-verification" content="hxScaAh08J5Y2er99rDZHIbt7WYUPi5LOqIbbgo6Npw" />
-    
     <meta name="theme-color" content="#ffffff">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="PlayRush">
-    
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap"></noscript>
-
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -54,9 +46,7 @@
         "sameAs": ["https://twitter.com/playrush_io", "https://t.me/+Ko41EKsStoE5ZmY0"]
     }
     </script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="preload">
@@ -67,20 +57,17 @@
             <button class="banner-close" onclick="closeBanner()" aria-label="Close banner">×</button>
         </div>
     </div>
-    
     <header class="header" role="banner">
         <nav class="nav" aria-label="Main navigation">
             <div class="logo-container">
-                <img src="assets/LOGO.png" alt="PlayRush.io Logo" class="logo-img" width="40" height="40">
+                <img src="/assets/LOGO.png" alt="PlayRush.io Logo" class="logo-img" width="40" height="40">
                 <div class="logo-text">PLAYRUSH</div>
             </div>
-            
             <div class="hamburger" id="hamburger">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
-            
             <ul class="nav-menu" id="navMenu" role="menubar">
                 <li><a href="#home" class="nav-link">Home</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
@@ -88,10 +75,9 @@
                 <li><a href="#community" class="nav-link">Community</a></li>
                 <li><a href="#token-preview" class="nav-link">Token</a></li>
                 <li class="mobile-only"><a href="https://twitter.com/playrush_io" class="nav-link" target="_blank">Twitter</a></li>
-                <li class="mobile-only"><a href="https://t.me/+JXjfc9bgieo5NTU0" class="nav-link" target="_blank">Telegram</a></li>
+                <li class="mobile-only"><a href="https://t.me/+Ko41EKsStoE5ZmY0" class="nav-link" target="_blank">Telegram</a></li>
                 <li class="mobile-only"><a href="#waitlist" class="btn-primary mobile-cta">Join Waitlist</a></li>
             </ul>
-            
             <div class="nav-buttons">
                 <div class="social-links">
                     <a href="https://twitter.com/playrush_io" class="social-link" aria-label="Follow us on Twitter" rel="noopener noreferrer" target="_blank">
@@ -99,9 +85,9 @@
                             <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
                         </svg>
                     </a>
-                    <a href="https://t.me/+JXjfc9bgieo5NTU0" class="social-link" aria-label="Join us on Telegram" rel="noopener noreferrer" target="_blank">
+                    <a href="https://t.me/+Ko41EKsStoE5ZmY0" class="social-link" aria-label="Join us on Telegram" rel="noopener noreferrer" target="_blank">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M9.417 15.181l-.397 5.584c.568 0 .814-.244 1.109-.537l2.663-2.545 5.518 4.041c1.012.564 1.725.267 1.998-.931L23.93 3.747c.267-1.611-.906-2.204-2.275-1.51L2.3 10.444c-1.609.597-1.593 1.418-.09 1.789l4.286 1.103 9.92-6.228c.675-.402 1.292.102 .924.833z"/>
+                            <path d="M9.417 15.181l-.397 5.584c.568 0 .814-.244 1.109-.537l2.663-2.545 5.518 4.041c1.012 .564 1.725.267 1.998-.931L23.93 3.747c.267-1.611-.906-2.204-2.275-1.51L2.3 10.444c-1.609.597-1.593 1.418-.09 1.789l4.286 1.103 9.92-6.228c.675-.402 1.292.102 .924.833z"/>
                         </svg>
                     </a>
                 </div>
@@ -109,17 +95,14 @@
             </div>
         </nav>
     </header>
-    
     <a href="#waitlist" class="sticky-cta">Join Waitlist</a>
-    
-    <div class="admin-panel admin-only" id="adminPanel">
+    <div class="admin-panel admin-only" id="adminPanel" style="display: none;">
         <h3>Admin Panel</h3>
         <button class="btn-secondary" onclick="window.PlayRushWaitlist.exportWaitlist()">Export Waitlist</button>
         <div class="admin-stats">
             <div>Waitlist Count: <span id="adminWaitlistCount">0</span></div>
         </div>
     </div>
-    
     <main id="main-content">
         <section id="home" class="hero">
             <div class="hero-content">
@@ -132,7 +115,6 @@
                 </div>
             </div>
         </section>
-        
         <section id="about" class="section">
             <h2 class="section-title">About PlayRush</h2>
             <div class="about-content">
@@ -156,44 +138,39 @@
                 </div>
             </div>
         </section>
-        
         <section id="games" class="section">
             <h2 class="section-title">Our Games</h2>
             <div class="games-showcase">
                 <article class="game-card">
                     <span class="status-badge">In Development</span>
-                    <img src="/assets/chainbros.png" alt="ChainBros platform game" class="game-header" width="300" height="200" loading="lazy">
+                    <img data-src="/assets/chainbros.png" alt="ChainBros platform game" class="game-header" width="300" height="200" loading="lazy">
                     <div class="game-content">
                         <h3 class="game-title">ChainBros</h3>
                     </div>
                 </article>
-                
                 <article class="game-card">
                     <span class="status-badge">In Development</span>
-                    <img src="/assets/pixelhunt.png" alt="PixelHunt arcade game" class="game-header" width="300" height="200" loading="lazy">
+                    <img data-src="/assets/pixelhunt.png" alt="PixelHunt arcade game" class="game-header" width="300" height="200" loading="lazy">
                     <div class="game-content">
                         <h3 class="game-title">PixelHunt</h3>
                     </div>
                 </article>
-                
                 <article class="game-card">
                     <span class="status-badge">In Development</span>
-                    <img src="/assets/tankcity.png" alt="TankCity strategy game" class="game-header" width="300" height="200" loading="lazy">
+                    <img data-src="/assets/tankcity.png" alt="TankCity strategy game" class="game-header" width="300" height="200" loading="lazy">
                     <div class="game-content">
                         <h3 class="game-title">TankCity</h3>
                     </div>
                 </article>
-                
                 <article class="game-card">
                     <span class="status-badge">In Development</span>
-                    <img src="/assets/ThinkTacToe.png" alt="ThinkTacToe puzzle game" class="game-header" width="300" height="200" loading="lazy">
+                    <img data-src="/assets/ThinkTacToe.png" alt="ThinkTacToe puzzle game" class="game-header" width="300" height="200" loading="lazy">
                     <div class="game-content">
                         <h3 class="game-title">ThinkTacToe</h3>
                     </div>
                 </article>
             </div>
         </section>
-        
         <section id="community" class="section community-section">
             <h2 class="section-title">Join Our Vibrant Community</h2>
             <div class="community-content">
@@ -225,11 +202,10 @@
                 </div>
             </div>
             <div class="community-actions">
-                <a href="https://t.me/+JXjfc9bgieo5NTU0" class="btn-primary" target="_blank" rel="noopener noreferrer">Join Telegram</a>
+                <a href="https://t.me/+Ko41EKsStoE5ZmY0" class="btn-primary" target="_blank" rel="noopener noreferrer">Join Telegram</a>
                 <a href="https://twitter.com/playrush_io" class="btn-secondary" target="_blank" rel="noopener noreferrer">Follow on X</a>
             </div>
         </section>
-        
         <section id="token-preview" class="section token-section">
             <h2 class="section-title">$PR Campaign Token</h2>
             <div class="token-content">
@@ -262,12 +238,10 @@
             </div>
         </section>
     </main>
-    
     <footer id="waitlist" class="footer">
         <div class="footer-content">
-            <h3 class="footer-title">Join the Waitlist</h3>
+            <h2 class="footer-title">Join the Waitlist</h2>
             <p class="footer-subtitle">Be first to access $PR and shape the gaming future.</p>
-            
             <form class="newsletter-form" action="#" method="post">
                 <input type="email" id="email" name="email" placeholder="Enter your email" required>
                 <input type="text" id="honeypot" name="honeypot" style="display: none; visibility: hidden; opacity: 0; height: 0; width: 0; position: absolute;" tabindex="-1" autocomplete="off">
@@ -275,13 +249,11 @@
                     <button type="submit" class="newsletter-btn">Join Now</button>
                 </div>
             </form>
-            
             <div class="waitlist-stats">
                 <p class="waitlist-counter" style="display: none;">
                     <span class="waitlist-count">0</span> community members waiting
                 </p>
             </div>
-            
             <nav class="footer-links">
                 <a href="#home" class="footer-link">Home</a>
                 <a href="#about" class="footer-link">About</a>
@@ -289,7 +261,6 @@
                 <a href="#community" class="footer-link">Community</a>
                 <a href="#token-preview" class="footer-link">Token</a>
             </nav>
-            
             <div class="footer-social">
                 <a href="https://twitter.com/playrush_io" class="social-link" target="_blank" rel="noopener noreferrer">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -298,21 +269,18 @@
                 </a>
                 <a href="https://t.me/+Ko41EKsStoE5ZmY0" class="social-link" target="_blank" rel="noopener noreferrer">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M9.417 15.181l-.397 5.584c.568 0 .814-.244 1.109-.537l2.663-2.545 5.518 4.041c1.012.564 1.725.267 1.998-.931L23.93 3.747c.267-1.611-.906-2.204-2.275-1.51L2.3 10.444c-1.609.597-1.593 1.418-.09 1.789l4.286 1.103 9.92-6.228c.675-.402 1.292.102 .924.833z"/>
+                        <path d="M9.417 15.181l-.397 5.584c.568 0 .814-.244 1.109-.537l2.663-2.545 5.518 4.041c1.012 .564 1.725.267 1.998-.931L23.93 3.747c.267-1.611-.906-2.204-2.275-1.51L2.3 10.444c-1.609.597-1.593 1.418-.09 1.789l4.286 1.103 9.92-6.228c.675-.402 1.292.102 .924.833z"/>
                     </svg>
                 </a>
             </div>
-            
             <div class="footer-contacts">
                 <p>Support: <a href="mailto:support@playrush.io">support@playrush.io</a></p>
                 <p>Partnerships: <a href="mailto:partnership@playrush.io">partnership@playrush.io</a></p>
             </div>
-            
             <p class="footer-text">© 2025 PlayRush.io</p>
         </div>
     </footer>
-
-    <script src="firebase.js"></script>
-    <script src="script.js"></script>
+    <script defer src="supabase.js"></script>
+    <script defer src="script.js"></script>
 </body>
 </html>
