@@ -236,6 +236,38 @@ body {
     transform: translateY(-1px);
 }
 
+.btn-buy {
+    background: var(--gradient);
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 1rem;
+    transition: opacity 0.3s ease;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn-buy:disabled {
+    background: var(--text-muted);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.btn-buy .status-badge {
+    position: static;
+    margin-left: 0.5rem;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+}
+
 .btn-large {
     padding: 1rem 2rem;
     font-size: 1rem;
@@ -498,6 +530,98 @@ body {
     flex-wrap: wrap;
 }
 
+.roadmap-section {
+    background: var(--bg-primary);
+}
+
+.roadmap-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+.roadmap-timeline {
+    position: relative;
+    padding: 2rem 0;
+}
+
+.roadmap-timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 4px;
+    height: 100%;
+    background: var(--gradient);
+    transform: translateX(-50%);
+}
+
+.roadmap-stage {
+    position: relative;
+    margin-bottom: 3rem;
+    padding: 1rem;
+    background: var(--card-bg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    width: 45%;
+    text-align: left;
+}
+
+.roadmap-stage:nth-child(odd) {
+    margin-left: 5%;
+}
+
+.roadmap-stage:nth-child(even) {
+    margin-left: 50%;
+}
+
+.roadmap-stage::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    width: 20px;
+    height: 20px;
+    background: var(--primary);
+    border-radius: 50%;
+    border: 3px solid var(--bg-primary);
+}
+
+.roadmap-stage:nth-child(odd)::before {
+    right: -32px;
+}
+
+.roadmap-stage:nth-child(even)::before {
+    left: -32px;
+}
+
+.stage-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.stage-milestones {
+    list-style: none;
+    padding-left: 1rem;
+}
+
+.stage-milestones li {
+    position: relative;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    padding-left: 1.5rem;
+}
+
+.stage-milestones li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+    font-size: 1.2rem;
+}
+
 .token-section {
     background: var(--gradient-subtle);
 }
@@ -534,19 +658,25 @@ body {
     line-height: 1.7;
 }
 
-.contract-info {
+.contract-info,
+.coingecko-info,
+.coinmarketcap-info {
     margin-bottom: 2rem;
     width: 100%;
     max-width: 500px;
 }
 
-.contract-label {
+.contract-label,
+.coingecko-info .contract-label,
+.coinmarketcap-info .contract-label {
     font-size: 0.875rem;
     color: var(--text-muted);
     margin-bottom: 0.5rem;
 }
 
-.contract-address {
+.contract-address,
+.coingecko-link,
+.coinmarketcap-link {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -557,10 +687,17 @@ body {
     justify-content: center;
 }
 
-.address-text {
+.address-text,
+.coingecko-link a,
+.coinmarketcap-link .address-text {
     font-family: 'Monaco', monospace;
     font-size: 0.875rem;
     color: var(--text-secondary);
+    text-decoration: none;
+}
+
+.coingecko-link a:hover {
+    color: var(--primary);
 }
 
 .token-hype {
@@ -615,25 +752,6 @@ body {
 .purchase-actions {
     width: 100%;
     max-width: 400px;
-}
-
-.btn-buy {
-    background: var(--gradient);
-    color: white;
-    padding: 1rem 2rem;
-    border: none;
-    border-radius: var(--radius-lg);
-    font-weight: 600;
-    font-size: 1rem;
-    cursor: not-allowed;
-    width: 100%;
-    margin-bottom: 1rem;
-    opacity: 0.8;
-    transition: opacity 0.3s ease;
-}
-
-.btn-buy:hover {
-    opacity: 1;
 }
 
 .footer {
@@ -907,7 +1025,8 @@ body {
     }
     
     .about-content,
-    .community-content {
+    .community-content,
+    .roadmap-content {
         gap: 2rem;
     }
     
@@ -991,6 +1110,24 @@ body {
     
     .community-text {
         text-align: center;
+    }
+    
+    .roadmap-timeline::before {
+        left: 20px;
+    }
+    
+    .roadmap-stage {
+        width: 100%;
+        margin-left: 0;
+        padding-left: 3rem;
+    }
+    
+    .roadmap-stage::before {
+        left: -10px;
+    }
+    
+    .roadmap-stage:nth-child(even) {
+        margin-left: 0;
     }
     
     .games-showcase {
@@ -1171,6 +1308,18 @@ body {
     
     .token-hype {
         padding: 0.75rem;
+    }
+    
+    .roadmap-stage {
+        padding: 0.75rem;
+    }
+    
+    .stage-title {
+        font-size: 1.25rem;
+    }
+    
+    .stage-milestones li {
+        font-size: 0.9rem;
     }
     
     .footer-links {

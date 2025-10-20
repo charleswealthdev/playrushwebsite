@@ -1,10 +1,5 @@
-// ================================
-// PlayRush Supabase Waitlist Script
-// ================================
-
 const SUPABASE_URL = 'https://kezhsqenliibcxucqmvz.supabase.co';
-const SUPABASE_ANON_KEY =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtlemhzcWVubGlpYmN4dWNxbXZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAxOTk4MjYsImV4cCI6MjA3NTc3NTgyNn0.UmrUOc1n9xBLE5cnyIEkXbTISfc9_PF9cv2ZORuh4l8';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtlemhzcWVubGlpYmN4dWNxbXZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAxOTk4MjYsImV4cCI6MjA3NTc3NTgyNn0.UmrUOc1n9xBLE5cnyIEkXbTISfc9_PF9cv2ZORuh4l8';
 
 let supabase = null;
 
@@ -16,12 +11,10 @@ window.playrushState = {
 };
 
 // Initialize Supabase
-function initSupabase() {
-  if (
-    typeof window.supabase === 'undefined' ||
-    typeof window.supabase.createClient === 'undefined'
-  ) {
+async function initSupabase() {
+  if (typeof window.supabase === 'undefined' || typeof window.supabase.createClient === 'undefined') {
     console.error('❌ Supabase library not loaded.');
+    showToast('Service unavailable. Please try again later.', 'error');
     return false;
   }
 
@@ -31,6 +24,7 @@ function initSupabase() {
     return true;
   } catch (error) {
     console.error('❌ Failed to initialize Supabase:', error);
+    showToast('Failed to connect to database. Contact support@playrush.io.', 'error');
     return false;
   }
 }
@@ -40,19 +34,13 @@ function showToast(message, type = 'success') {
   const container = document.createElement('div');
   container.id = 'toastContainer';
   container.style.position = 'fixed';
-  container.style.top = '20px';
+  container.style.bottom = '20px';
   container.style.right = '20px';
   container.style.zIndex = '1000';
   document.body.appendChild(container);
 
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
-  toast.style.padding = '10px 20px';
-  toast.style.marginBottom = '10px';
-  toast.style.borderRadius = '4px';
-  toast.style.color = '#fff';
-  toast.style.background = type === 'error' ? '#e63946' : type === 'warning' ? '#f4a261' : '#2a9d8f';
-  toast.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
   toast.textContent = message;
   container.appendChild(toast);
 
@@ -162,6 +150,7 @@ async function getWaitlistCount() {
     return count || 0;
   } catch (error) {
     console.error('Error getting waitlist count:', error);
+    showToast('Failed to fetch waitlist count. Contact support@playrush.io.', 'error');
     return 0;
   }
 }
@@ -173,9 +162,9 @@ async function updateWaitlistCounter() {
   const countSpan = document.querySelector('.waitlist-count');
   const adminCount = document.getElementById('adminWaitlistCount');
 
-  if (count >= 500) {
+  if (count > 0) {
     if (counter && countSpan) {
-      countSpan.textContent = count.toLocaleString();
+      countSpan.textContent = count.toLocaleString() + '+';
       counter.style.display = 'block';
     }
     if (adminCount) adminCount.textContent = count.toLocaleString();
@@ -184,7 +173,7 @@ async function updateWaitlistCounter() {
   }
 
   if (count > 18000) {
-    showToast('Waitlist growing fast—nearing daily limit!', 'warning');
+    showToast('Waitlist growing fast—nearing capacity! Join now!', 'warning');
   }
 }
 
@@ -193,57 +182,70 @@ async function handleEmailVerification() {
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('verified') !== 'true') return;
 
-  const storedEmail = localStorage.getItem('waitlistEmail');
-  if (!storedEmail) {
-    console.error('No email found in localStorage for verification');
-    showToast('Email verification failed. No email stored. Please try again.', 'error');
-    window.history.replaceState({}, '', window.location.pathname);
-    return;
-  }
-
   try {
-    const {
-      data: { session },
-      error: sessionError,
-    } = await supabase.auth.getSession();
-    if (sessionError || !session) {
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError || !session || !session.user) {
       console.error('Session error:', sessionError || 'No active session');
-      throw new Error('Invalid or expired verification link. Please request a new link.');
+      showToast('Invalid or expired verification link. Please request a new link.', 'error');
+      window.history.replaceState({}, '', window.location.pathname);
+      return;
+    }
+
+    const userEmail = session.user.email;
+    if (!userEmail) {
+      console.error('No email found in session');
+      showToast('Email verification failed. No email found. Please try again.', 'error');
+      window.history.replaceState({}, '', window.location.pathname);
+      return;
+    }
+
+    const { data: existingEmail } = await supabase
+      .from('waitlist')
+      .select('id')
+      .eq('email', userEmail.toLowerCase().trim())
+      .maybeSingle();
+
+    if (existingEmail) {
+      showToast("You're already on our waitlist! Join our Telegram community.", 'success');
+      await supabase.auth.signOut();
+      window.history.replaceState({}, '', window.location.pathname);
+      setTimeout(() => {
+        window.open('https://t.me/+JXjfc9bgieo5NTU0', '_blank');
+      }, 1500);
+      return;
     }
 
     const { error: insertError } = await supabase.from('waitlist').insert({
-      email: storedEmail.toLowerCase().trim(),
+      email: userEmail.toLowerCase().trim(),
       user_agent: navigator.userAgent,
-      verified: true,
+      timestamp: new Date().toISOString().split('.')[0]
     });
 
     if (insertError) {
       if (insertError.code === '23505') {
-        console.warn('Duplicate email detected:', storedEmail);
-        showToast("You're already on our waitlist!", 'success');
+        console.warn('Duplicate email detected:', userEmail);
+        showToast("You're already on our waitlist! Join our Telegram community.", 'success');
       } else {
         console.error('Database insert error:', insertError);
         throw new Error(`Database error: ${insertError.message}`);
       }
     } else {
-      showToast('Welcome to PlayRush! 🎮 Redirecting to Telegram...', 'success');
+      showToast('Welcome to PlayRush! 🎮 Redirecting to Telegram in 2s...', 'success');
     }
 
-    localStorage.removeItem('waitlistEmail');
     await supabase.auth.signOut();
+    window.history.replaceState({}, '', window.location.pathname);
 
     setTimeout(() => {
-      window.open('https://t.me/+Ko41EKsStoE5ZmY0', '_blank');
-      window.history.replaceState({}, '', window.location.pathname);
+      window.open('https://t.me/+JXjfc9bgieo5NTU0', '_blank');
     }, 2000);
   } catch (error) {
     console.error('Verification error:', error.message);
-    showToast(error.message || 'Verification failed. Please try again.', 'error');
+    showToast(error.message || 'Verification failed. Contact support@playrush.io.', 'error');
     window.history.replaceState({}, '', window.location.pathname);
   }
 }
 
-// Waitlist Submission
 async function handleWaitlistSubmit(e) {
   e.preventDefault();
 
@@ -291,13 +293,18 @@ async function handleWaitlistSubmit(e) {
       .maybeSingle();
 
     if (existingEmail) {
-      showToast("You're already on our waitlist!", 'success');
+      showToast("You're already on our waitlist! Join our Telegram community.", 'success');
       emailInput.value = '';
+      submitBtn.textContent = originalText;
+      submitBtn.disabled = false;
+      setTimeout(() => {
+        window.open('https://t.me/+JXjfc9bgieo5NTU0', '_blank');
+      }, 1500);
       return;
     }
 
     const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    const redirectBase = isDev ? window.location.origin : 'https://test.playrush.io';
+    const redirectBase = isDev ? window.location.origin : 'https://playrush.io';
     const redirectURL = `${redirectBase}/?verified=true`;
 
     console.log('🔗 Email redirect:', redirectURL);
@@ -312,27 +319,26 @@ async function handleWaitlistSubmit(e) {
     if (otpError) {
       console.error('SMTP error:', otpError);
       if (otpError.message.includes('rate limit')) {
-        showToast('Too many emails sent. Please try again later.', 'error');
+        showToast('Too many emails sent. Please try again later or contact support@playrush.io.', 'error');
       } else if (otpError.message.includes('smtp') || otpError.message.includes('authentication')) {
-        showToast('Email service configuration error. Please contact support@playrush.io.', 'error');
+        showToast('Email service error. Please contact support@playrush.io.', 'error');
       } else {
         throw otpError;
       }
     } else {
-      localStorage.setItem('waitlistEmail', email);
       showToast('Check your email! Click the link to confirm your spot.', 'success');
       emailInput.value = '';
     }
   } catch (error) {
     console.error('Waitlist error:', error);
-    showToast('Failed to join waitlist. Please try again.', 'error');
+    showToast('Failed to join waitlist. Contact support@playrush.io.', 'error');
   } finally {
     submitBtn.textContent = originalText;
     submitBtn.disabled = false;
   }
 }
 
-// Admin Panel
+
 async function exportWaitlist() {
   if (!supabase || !window.playrushState.adminMode) {
     showToast('Admin access required.', 'error');
@@ -340,10 +346,10 @@ async function exportWaitlist() {
   }
 
   try {
-    const { data, error } = await supabase.from('waitlist').select('email, created_at, verified');
+    const { data, error } = await supabase.from('waitlist').select('email, timestamp, id, user_agent');
     if (error) throw error;
 
-    const csv = ['email,created_at,verified', ...data.map(row => `${row.email},${row.created_at},${row.verified}`)].join('\n');
+    const csv = ['email,timestamp,id,user_agent', ...data.map(row => `${row.email},${row.timestamp},${row.id},${row.user_agent || ''}`)].join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -354,11 +360,11 @@ async function exportWaitlist() {
     showToast('Waitlist exported successfully.', 'success');
   } catch (error) {
     console.error('Export error:', error);
-    showToast('Failed to export waitlist.', 'error');
+    showToast('Failed to export waitlist. Contact support@playrush.io.', 'error');
   }
 }
 
-// Scroll Header and Sticky CTA
+
 let lastScrollY = 0;
 let ticking = false;
 
@@ -379,7 +385,6 @@ function updateHeaderAndCta() {
   ticking = false;
 }
 
-// Intersection Observer for Animations
 const observerOptions = {
   threshold: 0.1,
   rootMargin: '0px 0px -50px 0px'
@@ -394,7 +399,7 @@ const observer = new IntersectionObserver((entries) => {
   });
 }, observerOptions);
 
-// Initialize Features
+
 function initImageLazyLoading() {
   if ('IntersectionObserver' in window) {
     const imageObserver = new IntersectionObserver((entries) => {
@@ -431,144 +436,52 @@ function initKeyboardShortcuts() {
   });
 }
 
+function enableAdminMode() {
+  const adminPanel = document.getElementById('adminPanel');
+  if (adminPanel) {
+    window.playrushState.adminMode = true;
+    adminPanel.style.display = 'block';
+    showToast('Admin mode enabled', 'success');
+  }
+}
+
 function initTouchOptimizations() {
   if ('ontouchstart' in window) {
     document.body.classList.add('touch-device');
     const interactiveElements = document.querySelectorAll(
-      '.btn-primary, .btn-secondary, .game-card, .social-link'
+      '.btn-primary, .btn-secondary, .nav-link, .social-link, .footer-link'
     );
     interactiveElements.forEach(el => {
       el.addEventListener('touchstart', () => {
-        el.style.transform = 'scale(0.98)';
-      }, { passive: true });
+        el.classList.add('touch-active');
+      });
       el.addEventListener('touchend', () => {
         setTimeout(() => {
-          el.style.transform = '';
-        }, 100);
-      }, { passive: true });
-    });
-  }
-}
-
-function enableAdminMode() {
-  window.playrushState.adminMode = true;
-  const adminElements = document.querySelectorAll('.admin-only');
-  adminElements.forEach(element => {
-    element.style.display = 'block';
-  });
-  showToast('Admin mode enabled');
-  console.log('PlayRush admin mode activated');
-  updateWaitlistCounter();
-}
-
-function initPerformanceMonitoring() {
-  if ('PerformanceObserver' in window) {
-    const observer = new PerformanceObserver((entries) => {
-      entries.getEntries().forEach((entry) => {
-        if (entry.entryType === 'navigation') {
-          const loadTime = Math.round(entry.loadEventEnd - entry.loadEventStart);
-          console.log(`PlayRush loaded in ${loadTime}ms`);
-        }
+          el.classList.remove('touch-active');
+        }, 150);
       });
     });
-    observer.observe({ entryTypes: ['navigation'] });
   }
 }
 
-// PlayRushWaitlist Object
-window.PlayRushWaitlist = {
-  addToWaitlist: async (email, clientData) => {
-    if (!supabase) throw new Error('Supabase not initialized');
-    if (clientData.honeypot) throw new Error('Invalid submission detected');
-    const { data: existingEmail } = await supabase
-      .from('waitlist')
-      .select('id')
-      .eq('email', email)
-      .maybeSingle();
-    if (existingEmail) throw new Error('duplicate_email');
-    const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    const redirectBase = isDev ? window.location.origin : 'https://test.playrush.io';
-    const redirectURL = `${redirectBase}/?verified=true`;
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: redirectURL },
-    });
-    if (error) {
-      if (error.message.includes('rate limit')) {
-        throw new Error('Too many emails sent');
-      } else if (error.message.includes('smtp') || error.message.includes('authentication')) {
-        throw new Error('Email service configuration error');
-      }
-      throw error;
-    }
-    return { message: 'Check your email! Click the link to confirm your spot.' };
-  },
-  verifyAndAddToWaitlist: async (email) => {
-    if (!supabase) throw new Error('Supabase not initialized');
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-    if (sessionError || !session) throw new Error('Invalid verification link');
-    const { error: insertError } = await supabase.from('waitlist').insert({
-      email: email.toLowerCase().trim(),
-      user_agent: navigator.userAgent,
-      verified: true,
-    });
-    if (insertError) {
-      if (insertError.code === '23505') throw new Error('duplicate_email');
-      throw insertError;
-    }
-    await supabase.auth.signOut();
-    return { message: 'Successfully added to waitlist' };
-  },
-  getWaitlistCount: async () => {
-    return await getWaitlistCount();
-  },
-  exportWaitlist: exportWaitlist
-};
-
-// Initialize
-document.addEventListener('DOMContentLoaded', async () => {
-  console.log('🚀 PlayRush initializing...');
-
-  // Remove stray hash
-  if (window.location.hash === '#') {
-    window.history.replaceState({}, '', window.location.pathname);
+document.addEventListener('DOMContentLoaded', () => {
+  if (initSupabase()) {
+    handleEmailVerification();
+    updateWaitlistCounter();
+    setInterval(updateWaitlistCounter, 60000);
   }
 
-  let attempts = 0;
-  while (typeof window.supabase === 'undefined' && attempts < 50) {
-    await new Promise(r => setTimeout(r, 100));
-    attempts++;
-  }
-
-  if (!initSupabase()) {
-    showToast('Failed to connect to database. Some features may not work.', 'error');
-    return;
-  }
-
-  showBanner();
   initSmoothScrolling();
   initImageLazyLoading();
   initKeyboardShortcuts();
   initTouchOptimizations();
-  initPerformanceMonitoring();
-  updateWaitlistCounter();
-  handleEmailVerification();
+  showBanner();
 
-  const hamburger = document.getElementById('hamburger');
-  if (hamburger) {
-    hamburger.addEventListener('click', toggleMobileMenu);
-    document.addEventListener('click', (e) => {
-      const navMenu = document.getElementById('navMenu');
-      if (!hamburger.contains(e.target) && !navMenu.contains(e.target) && navMenu.classList.contains('active')) {
-        closeMobileMenu();
-      }
-    });
-  }
+  window.formLoadTime = Date.now();
 
-  const waitlistForm = document.querySelector('.newsletter-form');
-  if (waitlistForm) {
-    waitlistForm.addEventListener('submit', handleWaitlistSubmit);
-    window.formLoadTime = Date.now();
+  const form = document.querySelector('.newsletter-form');
+  if (form) {
+    form.addEventListener('submit', handleWaitlistSubmit);
   }
 
   window.addEventListener('scroll', () => {
@@ -576,59 +489,20 @@ document.addEventListener('DOMContentLoaded', async () => {
       requestAnimationFrame(updateHeaderAndCta);
       ticking = true;
     }
-  }, { passive: true });
-
-  window.addEventListener('load', () => {
-    document.body.classList.remove('preload');
   });
 
-  window.addEventListener('resize', () => {
-    if (window.innerWidth > 768) {
-      closeMobileMenu();
-    }
-  });
-
-  if (supabase) {
-    supabase
-      .channel('waitlist-changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'waitlist' }, updateWaitlistCounter)
-      .subscribe();
+  const hamburger = document.getElementById('hamburger');
+  if (hamburger) {
+    hamburger.addEventListener('click', toggleMobileMenu);
   }
 
-  document.querySelectorAll('.scroll-animate').forEach(el => {
-    observer.observe(el);
+  document.querySelectorAll('.section').forEach(section => {
+    observer.observe(section);
   });
 
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('admin') === 'playrush2025') {
-    enableAdminMode();
-  }
+  window.PlayRushWaitlist = {
+    exportWaitlist
+  };
 
-  setTimeout(() => {
-    const elementsInView = document.querySelectorAll('.scroll-animate');
-    elementsInView.forEach((el) => {
-      const rect = el.getBoundingClientRect();
-      if (rect.top < window.innerHeight && rect.bottom > 0) {
-        el.classList.add('animate');
-      }
-    });
-  }, 100);
-
-  console.log('✅ PlayRush initialized successfully');
+  document.body.classList.remove('preload');
 });
-
-window.scrollToWaitlist = scrollToWaitlist;
-window.closeBanner = closeBanner;
-window.PlayRush = {
-  scrollToWaitlist,
-  showToast,
-  trackEvent: (event, data = {}) => {
-    console.log('Event:', event, data);
-    if (typeof gtag !== 'undefined') {
-      gtag('event', event, data);
-    }
-  },
-  enableAdminMode,
-  toggleMobileMenu,
-  closeMobileMenu
-};

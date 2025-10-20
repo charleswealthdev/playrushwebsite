@@ -1,0 +1,26 @@
+{
+  "name": "playrushwebsite",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/charleswealthdev/playrushwebsite.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/charleswealthdev/playrushwebsite/issues"
+  },
+  "homepage": "https://github.com/charleswealthdev/playrushwebsite#readme",
+  "dependencies": {
+    "csv-parse": "^6.1.0",
+    "csv-stringify": "^6.6.0",
+    "luxon": "^3.7.2",
+    "uuid": "^13.0.0"
+  }
+}
